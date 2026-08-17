@@ -1,0 +1,43 @@
+name: PaperMon
+
+options:
+  bundleIdPrefix: com.papermon
+  deploymentTarget:
+    macOS: "14.0"
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    ENABLE_HARDENED_RUNTIME: YES
+
+targets:
+  PaperMon:
+    type: application
+    platform: macOS
+    sources:
+      - path: PaperMon
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.papermon.app
+        PRODUCT_NAME: PaperMon
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: PaperMon
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.utilities
+        INFOPLIST_KEY_NSHumanReadableCopyright: Copyright 2026 PaperMon
+        CODE_SIGN_ENTITLEMENTS: PaperMon/PaperMon.entitlements
+    scheme:
+      testTargets:
+        - PaperMonTests
+
+  PaperMonTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: PaperMonTests
+    dependencies:
+      - target: PaperMon
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.papermon.tests
+        GENERATE_INFOPLIST_FILE: YES
+

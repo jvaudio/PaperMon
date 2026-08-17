@@ -1,0 +1,421 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1C90F2C635906CCA00E61E69 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80529588231E723704A6C6A2 /* MenuBarView.swift */; };
+		1DF25CD0BD064E8C0146535E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95E662EAF5749F2342195770 /* SettingsView.swift */; };
+		BB08E31E5A74427269707947 /* PlaceholderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59DFD9B23B09E44528BFAA9F /* PlaceholderTests.swift */; };
+		DF7C6D6612C3355EB6298BF6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4687D3890E22E0FF5E172AAA /* ContentView.swift */; };
+		E7563E76F251AA35662C1563 /* PaperMonApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5E78C5030A53BC02A66216 /* PaperMonApp.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		44C7AFF3223783F708F72F68 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D431D17528F689E94E006578 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7F8C9C2FEC81032C1FE6FDBE;
+			remoteInfo = PaperMon;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		4687D3890E22E0FF5E172AAA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		59DFD9B23B09E44528BFAA9F /* PlaceholderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderTests.swift; sourceTree = "<group>"; };
+		6B8BCF3CEE9873D38C532888 /* PaperMonTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PaperMonTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		80529588231E723704A6C6A2 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
+		95E662EAF5749F2342195770 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		990191718BE643A6EBC0F771 /* PaperMon.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PaperMon.entitlements; sourceTree = "<group>"; };
+		AE5E78C5030A53BC02A66216 /* PaperMonApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaperMonApp.swift; sourceTree = "<group>"; };
+		DBB3379F5243B0E8529128EA /* PaperMon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PaperMon.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		3FB8CB8ED5F12508E1C76BBB /* PaperMonTests */ = {
+			isa = PBXGroup;
+			children = (
+				59DFD9B23B09E44528BFAA9F /* PlaceholderTests.swift */,
+			);
+			path = PaperMonTests;
+			sourceTree = "<group>";
+		};
+		ADEB043DEB6227D5FF01DB62 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				4687D3890E22E0FF5E172AAA /* ContentView.swift */,
+				80529588231E723704A6C6A2 /* MenuBarView.swift */,
+				95E662EAF5749F2342195770 /* SettingsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		BD3F34C784BC786825735F49 = {
+			isa = PBXGroup;
+			children = (
+				C2692EFE6418F84698496B36 /* PaperMon */,
+				3FB8CB8ED5F12508E1C76BBB /* PaperMonTests */,
+				F9CA8AF3CB32FC1987DF0205 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C2692EFE6418F84698496B36 /* PaperMon */ = {
+			isa = PBXGroup;
+			children = (
+				990191718BE643A6EBC0F771 /* PaperMon.entitlements */,
+				E460EC56AFD1CD706D76B2BC /* App */,
+				ADEB043DEB6227D5FF01DB62 /* Views */,
+			);
+			path = PaperMon;
+			sourceTree = "<group>";
+		};
+		E460EC56AFD1CD706D76B2BC /* App */ = {
+			isa = PBXGroup;
+			children = (
+				AE5E78C5030A53BC02A66216 /* PaperMonApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		F9CA8AF3CB32FC1987DF0205 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DBB3379F5243B0E8529128EA /* PaperMon.app */,
+				6B8BCF3CEE9873D38C532888 /* PaperMonTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		7F8C9C2FEC81032C1FE6FDBE /* PaperMon */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 50467D7F34FFD6185E8AFDF2 /* Build configuration list for PBXNativeTarget "PaperMon" */;
+			buildPhases = (
+				527F08192B526EA8832B57B0 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PaperMon;
+			packageProductDependencies = (
+			);
+			productName = PaperMon;
+			productReference = DBB3379F5243B0E8529128EA /* PaperMon.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A8F2638E70AB19379C115807 /* PaperMonTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DCE4D17B6C055F3DF4F3E78 /* Build configuration list for PBXNativeTarget "PaperMonTests" */;
+			buildPhases = (
+				7325983FAD7E06D66A9156DC /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9A6395075BD27134F08258DF /* PBXTargetDependency */,
+			);
+			name = PaperMonTests;
+			packageProductDependencies = (
+			);
+			productName = PaperMonTests;
+			productReference = 6B8BCF3CEE9873D38C532888 /* PaperMonTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D431D17528F689E94E006578 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = 4D397D0003158CDFC968493C /* Build configuration list for PBXProject "PaperMon" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = BD3F34C784BC786825735F49;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = F9CA8AF3CB32FC1987DF0205 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7F8C9C2FEC81032C1FE6FDBE /* PaperMon */,
+				A8F2638E70AB19379C115807 /* PaperMonTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		527F08192B526EA8832B57B0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DF7C6D6612C3355EB6298BF6 /* ContentView.swift in Sources */,
+				1C90F2C635906CCA00E61E69 /* MenuBarView.swift in Sources */,
+				E7563E76F251AA35662C1563 /* PaperMonApp.swift in Sources */,
+				1DF25CD0BD064E8C0146535E /* SettingsView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7325983FAD7E06D66A9156DC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BB08E31E5A74427269707947 /* PlaceholderTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		9A6395075BD27134F08258DF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7F8C9C2FEC81032C1FE6FDBE /* PaperMon */;
+			targetProxy = 44C7AFF3223783F708F72F68 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		135F02CA8F1CEC57540192E3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.papermon.tests;
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PaperMon.app/Contents/MacOS/PaperMon";
+			};
+			name = Debug;
+		};
+		7D75471D267A8D197122809C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		8362B47532F86F8285BC28D3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = PaperMon/PaperMon.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = PaperMon;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright 2026 PaperMon";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.papermon.app;
+				PRODUCT_NAME = PaperMon;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		84456DE226B6303DAB111BB4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = PaperMon/PaperMon.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = PaperMon;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright 2026 PaperMon";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.papermon.app;
+				PRODUCT_NAME = PaperMon;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		C48EDC7FB03C967B13F4AFB2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.papermon.tests;
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PaperMon.app/Contents/MacOS/PaperMon";
+			};
+			name = Release;
+		};
+		E187CA8958B1474946539E2C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DCE4D17B6C055F3DF4F3E78 /* Build configuration list for PBXNativeTarget "PaperMonTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				135F02CA8F1CEC57540192E3 /* Debug */,
+				C48EDC7FB03C967B13F4AFB2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		4D397D0003158CDFC968493C /* Build configuration list for PBXProject "PaperMon" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7D75471D267A8D197122809C /* Debug */,
+				E187CA8958B1474946539E2C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		50467D7F34FFD6185E8AFDF2 /* Build configuration list for PBXNativeTarget "PaperMon" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				84456DE226B6303DAB111BB4 /* Debug */,
+				8362B47532F86F8285BC28D3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D431D17528F689E94E006578 /* Project object */;
+}
