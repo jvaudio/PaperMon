@@ -9,9 +9,14 @@
 /* Begin PBXBuildFile section */
 		1C90F2C635906CCA00E61E69 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80529588231E723704A6C6A2 /* MenuBarView.swift */; };
 		1DF25CD0BD064E8C0146535E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95E662EAF5749F2342195770 /* SettingsView.swift */; };
-		BB08E31E5A74427269707947 /* PlaceholderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59DFD9B23B09E44528BFAA9F /* PlaceholderTests.swift */; };
+		640F3764B769A6E7A856F048 /* ProfileStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF8FC585728AFFED2736914 /* ProfileStoreTests.swift */; };
+		784DB578C12187F73F44BC0E /* ProfileRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D24EE1C3C9BA8289780480 /* ProfileRepository.swift */; };
+		BF4DE0297934900C1D93A9EA /* WallpaperProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44EBC400A881C0FCF196BD5F /* WallpaperProfile.swift */; };
+		DBB25AD6BFB629CF40BE8FD6 /* ProfileRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C65D49373D731C08C3993B7E /* ProfileRepositoryTests.swift */; };
 		DF7C6D6612C3355EB6298BF6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4687D3890E22E0FF5E172AAA /* ContentView.swift */; };
+		E72EFC06663BAD126C8E5697 /* ProfileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 400C14890D46C46C9BF8288F /* ProfileStore.swift */; };
 		E7563E76F251AA35662C1563 /* PaperMonApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE5E78C5030A53BC02A66216 /* PaperMonApp.swift */; };
+		E9E93DE3078D7E999F600EA7 /* DisplayModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4548CC7995651A2ACC8AEF91 /* DisplayModels.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -25,23 +30,54 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		02D24EE1C3C9BA8289780480 /* ProfileRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileRepository.swift; sourceTree = "<group>"; };
+		400C14890D46C46C9BF8288F /* ProfileStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileStore.swift; sourceTree = "<group>"; };
+		44EBC400A881C0FCF196BD5F /* WallpaperProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WallpaperProfile.swift; sourceTree = "<group>"; };
+		4548CC7995651A2ACC8AEF91 /* DisplayModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayModels.swift; sourceTree = "<group>"; };
 		4687D3890E22E0FF5E172AAA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		59DFD9B23B09E44528BFAA9F /* PlaceholderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderTests.swift; sourceTree = "<group>"; };
 		6B8BCF3CEE9873D38C532888 /* PaperMonTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PaperMonTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		80529588231E723704A6C6A2 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
 		95E662EAF5749F2342195770 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		990191718BE643A6EBC0F771 /* PaperMon.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PaperMon.entitlements; sourceTree = "<group>"; };
 		AE5E78C5030A53BC02A66216 /* PaperMonApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaperMonApp.swift; sourceTree = "<group>"; };
+		C65D49373D731C08C3993B7E /* ProfileRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileRepositoryTests.swift; sourceTree = "<group>"; };
 		DBB3379F5243B0E8529128EA /* PaperMon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PaperMon.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		ECF8FC585728AFFED2736914 /* ProfileStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileStoreTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
+		3360AD369F957EDC505FF9AC /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				4548CC7995651A2ACC8AEF91 /* DisplayModels.swift */,
+				44EBC400A881C0FCF196BD5F /* WallpaperProfile.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		3FB8CB8ED5F12508E1C76BBB /* PaperMonTests */ = {
 			isa = PBXGroup;
 			children = (
-				59DFD9B23B09E44528BFAA9F /* PlaceholderTests.swift */,
+				C65D49373D731C08C3993B7E /* ProfileRepositoryTests.swift */,
+				ECF8FC585728AFFED2736914 /* ProfileStoreTests.swift */,
 			);
 			path = PaperMonTests;
+			sourceTree = "<group>";
+		};
+		68653A528D25F3F380AC4F5E /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				02D24EE1C3C9BA8289780480 /* ProfileRepository.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		93009BA62B86798F635D548C /* Stores */ = {
+			isa = PBXGroup;
+			children = (
+				400C14890D46C46C9BF8288F /* ProfileStore.swift */,
+			);
+			path = Stores;
 			sourceTree = "<group>";
 		};
 		ADEB043DEB6227D5FF01DB62 /* Views */ = {
@@ -68,6 +104,9 @@
 			children = (
 				990191718BE643A6EBC0F771 /* PaperMon.entitlements */,
 				E460EC56AFD1CD706D76B2BC /* App */,
+				3360AD369F957EDC505FF9AC /* Models */,
+				68653A528D25F3F380AC4F5E /* Services */,
+				93009BA62B86798F635D548C /* Stores */,
 				ADEB043DEB6227D5FF01DB62 /* Views */,
 			);
 			path = PaperMon;
@@ -165,9 +204,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				DF7C6D6612C3355EB6298BF6 /* ContentView.swift in Sources */,
+				E9E93DE3078D7E999F600EA7 /* DisplayModels.swift in Sources */,
 				1C90F2C635906CCA00E61E69 /* MenuBarView.swift in Sources */,
 				E7563E76F251AA35662C1563 /* PaperMonApp.swift in Sources */,
+				784DB578C12187F73F44BC0E /* ProfileRepository.swift in Sources */,
+				E72EFC06663BAD126C8E5697 /* ProfileStore.swift in Sources */,
 				1DF25CD0BD064E8C0146535E /* SettingsView.swift in Sources */,
+				BF4DE0297934900C1D93A9EA /* WallpaperProfile.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -175,7 +218,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BB08E31E5A74427269707947 /* PlaceholderTests.swift in Sources */,
+				DBB25AD6BFB629CF40BE8FD6 /* ProfileRepositoryTests.swift in Sources */,
+				640F3764B769A6E7A856F048 /* ProfileStoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
