@@ -5,19 +5,27 @@ MODE="${1:-run}"
 APP_NAME="PaperMon"
 BUNDLE_ID="com.papermon.app"
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-DERIVED_DATA="$ROOT_DIR/.build/DerivedData"
-APP_BUNDLE="$DERIVED_DATA/Build/Products/Debug/$APP_NAME.app"
+DIST_DIR="$ROOT_DIR/dist"
+APP_BUNDLE="$DIST_DIR/$APP_NAME.app"
+APP_CONTENTS="$APP_BUNDLE/Contents"
+APP_MACOS="$APP_CONTENTS/MacOS"
 APP_BINARY="$APP_BUNDLE/Contents/MacOS/$APP_NAME"
+INFO_PLIST="$APP_CONTENTS/Info.plist"
 
 pkill -x "$APP_NAME" >/dev/null 2>&1 || true
 
-xcodegen --spec "$ROOT_DIR/project.yml" --project "$ROOT_DIR"
-xcodebuild \
-  -project "$ROOT_DIR/PaperMon.xcodeproj" \
-  -scheme "$APP_NAME" \
-  -configuration Debug \
-  -derivedDataPath "$DERIVED_DATA" \
-  build
+swift build --package-path "$ROOT_DIR" --product "$APP_NAME"
+BUILD_BINARY="$(swift build --package-path "$ROOT_DIR" --show-bin-path)/$APP_NAME"
+
+mkdir -p "$APP_MACOS"
+cp -f "$BUILD_BINARY" "$APP_BINARY"
+cp -f "$ROOT_DIR/Packaging/Info.plist" "$INFO_PLIST"
+chmod +x "$APP_BINARY"
+/usr/bin/codesign \
+  --force \
+  --sign - \
+  --entitlements "$ROOT_DIR/PaperMon/PaperMon.entitlements" \
+  "$APP_BUNDLE"
 
 open_app() {
   /usr/bin/open -n "$APP_BUNDLE"
@@ -48,4 +56,3 @@ case "$MODE" in
     exit 2
     ;;
 esac
-

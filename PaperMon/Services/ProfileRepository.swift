@@ -25,7 +25,6 @@ struct ProfileRepository: Sendable {
 
         let data = try Data(contentsOf: libraryURL)
         let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
         let library = try decoder.decode(ProfileLibrary.self, from: data)
 
         guard library.schemaVersion <= ProfileLibrary.currentSchemaVersion else {
@@ -41,7 +40,6 @@ struct ProfileRepository: Sendable {
 
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-        encoder.dateEncodingStrategy = .iso8601
         let data = try encoder.encode(library)
         try data.write(to: libraryURL, options: .atomic)
     }
@@ -53,4 +51,3 @@ struct ProfileRepository: Sendable {
             .appendingPathComponent("profiles.json", isDirectory: false)
     }
 }
-
