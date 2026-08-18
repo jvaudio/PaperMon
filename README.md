@@ -43,6 +43,8 @@ swift test
 
 Tests cover versioned persistence, profile state, display matching, successful profile application, and rollback after a partial application failure.
 
+Before a beta or release, complete the [hardware acceptance checklist](Documentation/HardwareAcceptanceChecklist.md) on the monitor, dock, and lifecycle configurations available to the test team.
+
 ## Storage
 
 Profile metadata is stored under the user’s Application Support directory. Managed images are copied into the adjacent `PaperMon/Images` directory. Referenced originals use security-scoped bookmarks so access can survive relaunches and restarts.
@@ -52,4 +54,3 @@ Profile metadata is stored under the user’s Application Support directory. Man
 - Real hardware verification is still required across identical monitor models, DisplayLink docks, Sidecar, sleep/wake, and cable or port changes.
 - Per-Space wallpapers, animated wallpapers, display rotation, scheduling, and cloud sync are not part of this MVP.
 - Release distribution still requires a Developer ID or Mac App Store signing identity and notarization.
-
