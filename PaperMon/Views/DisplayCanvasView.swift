@@ -5,59 +5,38 @@ struct DisplayCanvasView: View {
     @Environment(AppModel.self) private var appModel
     let profile: WallpaperProfile
     @Binding var selection: DisplayAssignment.ID?
+    private let layout = MonitorCanvasLayout()
 
     var body: some View {
         GeometryReader { geometry in
-            let canvasSize = geometry.size
+            let frames = layout.frames(for: profile.assignments, in: geometry.size)
 
             ZStack {
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(.quaternary.opacity(0.35))
+                DotGridBackground()
 
                 ForEach(profile.assignments) { assignment in
-                    DisplayTile(
-                        assignment: assignment,
-                        isSelected: selection == assignment.id,
-                        preview: appModel.preview(for: assignment.image)
-                    )
-                    .frame(
-                        width: tileWidth(for: assignment, canvasWidth: canvasSize.width),
-                        height: tileHeight(for: assignment, canvasHeight: canvasSize.height)
-                    )
-                    .position(
-                        x: tileX(for: assignment, canvasWidth: canvasSize.width),
-                        y: tileY(for: assignment, canvasHeight: canvasSize.height)
-                    )
-                    .onTapGesture {
-                        selection = assignment.id
-                    }
-                    .dropDestination(for: URL.self) { urls, _ in
-                        guard let url = urls.first, url.isFileURL else { return false }
-                        selection = assignment.id
-                        appModel.assignImage(url, to: assignment.id)
-                        return true
+                    if let frame = frames[assignment.id] {
+                        DisplayTile(
+                            assignment: assignment,
+                            isSelected: selection == assignment.id,
+                            preview: appModel.preview(for: assignment.image)
+                        )
+                        .frame(width: frame.width, height: frame.height)
+                        .position(x: frame.midX, y: frame.midY)
+                        .onTapGesture {
+                            selection = assignment.id
+                        }
+                        .dropDestination(for: URL.self) { urls, _ in
+                            guard let url = urls.first, url.isFileURL else { return false }
+                            selection = assignment.id
+                            appModel.assignImage(url, to: assignment.id)
+                            return true
+                        }
                     }
                 }
             }
-            .padding(22)
+            .clipShape(Rectangle())
         }
-        .padding(20)
-    }
-
-    private func tileWidth(for assignment: DisplayAssignment, canvasWidth: Double) -> Double {
-        max(104, assignment.normalizedFrame.width * max(canvasWidth - 70, 200))
-    }
-
-    private func tileHeight(for assignment: DisplayAssignment, canvasHeight: Double) -> Double {
-        max(90, assignment.normalizedFrame.height * max(canvasHeight - 70, 180))
-    }
-
-    private func tileX(for assignment: DisplayAssignment, canvasWidth: Double) -> Double {
-        35 + (assignment.normalizedFrame.x + assignment.normalizedFrame.width / 2) * max(canvasWidth - 70, 200)
-    }
-
-    private func tileY(for assignment: DisplayAssignment, canvasHeight: Double) -> Double {
-        35 + (assignment.normalizedFrame.y + assignment.normalizedFrame.height / 2) * max(canvasHeight - 70, 180)
     }
 }
 
@@ -68,47 +47,56 @@ private struct DisplayTile: View {
 
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 9, style: .continuous)
-                .fill(.background)
+            RoundedRectangle(cornerRadius: 11, style: .continuous)
+                .fill(Color.black.opacity(0.92))
 
-            if let preview {
-                Image(nsImage: preview)
-                    .resizable()
-                    .aspectRatio(contentMode: assignment.presentation.scaling == .fit ? .fit : .fill)
-                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-            } else {
-                VStack(spacing: 8) {
-                    Image(systemName: "photo.badge.plus")
-                        .font(.title2)
-                    Text("Drop an image")
-                        .font(.caption)
+            ZStack {
+                RoundedRectangle(cornerRadius: 6, style: .continuous)
+                    .fill(Color.paperMonPanel)
+
+                if let preview {
+                    Image(nsImage: preview)
+                        .resizable()
+                        .aspectRatio(contentMode: assignment.presentation.scaling == .fit ? .fit : .fill)
+                        .clipped()
+                } else {
+                    VStack(spacing: 7) {
+                        Image(systemName: "photo.badge.plus")
+                            .font(.title3)
+                        Text("Drop an image")
+                            .font(.caption2.weight(.medium))
+                    }
+                    .foregroundStyle(Color.paperMonMuted)
                 }
-                .foregroundStyle(.secondary)
-            }
 
-            VStack {
-                Spacer()
-                HStack {
-                    Text(assignment.displayName)
-                        .font(.caption.weight(.medium))
-                        .lineLimit(1)
+                VStack {
                     Spacer()
-                    Image(systemName: assignment.fingerprint.orientation == .portrait ? "rectangle.portrait" : "rectangle")
+                    HStack(spacing: 6) {
+                        Text(assignment.displayName)
+                            .font(.caption2.weight(.semibold))
+                            .lineLimit(1)
+                        Spacer(minLength: 4)
+                        Image(systemName: assignment.fingerprint.orientation == .portrait ? "rectangle.portrait" : "rectangle")
+                    }
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 6)
+                    .background(.black.opacity(0.66))
                 }
-                .foregroundStyle(.white)
-                .padding(8)
-                .background(.black.opacity(0.62))
             }
-            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
+            .padding(5)
         }
         .overlay {
-            RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .stroke(isSelected ? Color.accentColor : .secondary.opacity(0.4), lineWidth: isSelected ? 3 : 1)
+            RoundedRectangle(cornerRadius: 11, style: .continuous)
+                .stroke(
+                    isSelected ? Color.paperMonAccent : Color.paperMonBorder,
+                    lineWidth: isSelected ? 3 : 1
+                )
         }
-        .shadow(color: .black.opacity(0.16), radius: 6, y: 3)
+        .shadow(color: .black.opacity(0.40), radius: 12, y: 6)
         .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(assignment.displayName), \(assignment.fingerprint.orientation.rawValue)")
     }
 }
-
