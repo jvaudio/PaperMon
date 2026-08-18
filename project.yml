@@ -20,8 +20,12 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.papermon.app
         PRODUCT_NAME: PaperMon
+        MARKETING_VERSION: 0.1.0
+        CURRENT_PROJECT_VERSION: 1
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: PaperMon
+        INFOPLIST_KEY_CFBundleShortVersionString: $(MARKETING_VERSION)
+        INFOPLIST_KEY_CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.utilities
         INFOPLIST_KEY_NSHumanReadableCopyright: Copyright 2026 PaperMon
         CODE_SIGN_ENTITLEMENTS: PaperMon/PaperMon.entitlements
@@ -40,4 +44,3 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.papermon.tests
         GENERATE_INFOPLIST_FILE: YES
-
