@@ -39,6 +39,20 @@ struct MonitorCanvasLayoutTests {
         #expect(frames[assignments[1].id]!.height > frames[assignments[1].id]!.width)
     }
 
+    @Test func separatesDisplaysWhoseSavedGeometryOverlaps() throws {
+        let assignments = [
+            assignment(name: "Top", serial: 1, frame: DisplayFrame(x: 0.25, y: 0, width: 0.5, height: 0.52), pixels: (1920, 1080)),
+            assignment(name: "Bottom", serial: 2, frame: DisplayFrame(x: 0.25, y: 0.48, width: 0.5, height: 0.52), pixels: (1920, 1080)),
+        ]
+
+        let frames = MonitorCanvasLayout().frames(for: assignments, in: CGSize(width: 900, height: 700))
+        let top = frames[assignments[0].id]!
+        let bottom = frames[assignments[1].id]!
+
+        #expect(!top.intersects(bottom))
+        #expect(bottom.minY - top.maxY >= 8)
+    }
+
     private func assignment(
         name: String,
         serial: UInt32,
@@ -61,4 +75,3 @@ struct MonitorCanvasLayoutTests {
         )
     }
 }
-
