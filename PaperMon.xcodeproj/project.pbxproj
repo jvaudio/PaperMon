@@ -10,6 +10,8 @@
 		0850CE9E1518A1987E273536 /* DisplayLayoutNormalizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0810CCCBE0370E49CA0F4A54 /* DisplayLayoutNormalizer.swift */; };
 		1C90F2C635906CCA00E61E69 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80529588231E723704A6C6A2 /* MenuBarView.swift */; };
 		1DF25CD0BD064E8C0146535E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95E662EAF5749F2342195770 /* SettingsView.swift */; };
+		211C612A278C31AE4A023B20 /* LoginItemManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 364678680E03ADC23211DF06 /* LoginItemManagerTests.swift */; };
+		23F4E185CDB709FE84A89C21 /* LoginItemService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC00FE97AF670875E3E1EC06 /* LoginItemService.swift */; };
 		2F828286DA6682DED6930435 /* DisplayMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11F9DC0F4420FDA46487664 /* DisplayMatcher.swift */; };
 		321F84E106F2F0AC65DCD564 /* DisplayInspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10DD777B6AF9FB2BF86910E0 /* DisplayInspectorView.swift */; };
 		32D9ED2F6DB24C7C0B302473 /* MonitorCanvasLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ABF1F2A5507242692DAFF1 /* MonitorCanvasLayout.swift */; };
@@ -54,6 +56,7 @@
 		0580FE376E9F9CDF76C92F26 /* DotGridBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DotGridBackground.swift; sourceTree = "<group>"; };
 		0810CCCBE0370E49CA0F4A54 /* DisplayLayoutNormalizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayLayoutNormalizer.swift; sourceTree = "<group>"; };
 		10DD777B6AF9FB2BF86910E0 /* DisplayInspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayInspectorView.swift; sourceTree = "<group>"; };
+		364678680E03ADC23211DF06 /* LoginItemManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginItemManagerTests.swift; sourceTree = "<group>"; };
 		3A3A38C95DC40C011F209397 /* PaperMonTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaperMonTheme.swift; sourceTree = "<group>"; };
 		400C14890D46C46C9BF8288F /* ProfileStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileStore.swift; sourceTree = "<group>"; };
 		44EBC400A881C0FCF196BD5F /* WallpaperProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WallpaperProfile.swift; sourceTree = "<group>"; };
@@ -80,6 +83,7 @@
 		DBB3379F5243B0E8529128EA /* PaperMon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PaperMon.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E11F9DC0F4420FDA46487664 /* DisplayMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayMatcher.swift; sourceTree = "<group>"; };
 		E5F9A6B796201569823E644D /* MonitorCanvasLayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonitorCanvasLayoutTests.swift; sourceTree = "<group>"; };
+		EC00FE97AF670875E3E1EC06 /* LoginItemService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginItemService.swift; sourceTree = "<group>"; };
 		ECF8FC585728AFFED2736914 /* ProfileStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileStoreTests.swift; sourceTree = "<group>"; };
 		F968AC3B9CC6088A527FE807 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		FBB4697036AF269E721795BC /* DisplayStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayStore.swift; sourceTree = "<group>"; };
@@ -100,6 +104,7 @@
 			isa = PBXGroup;
 			children = (
 				87602B17049DC2780B8978E7 /* DisplayMatcherTests.swift */,
+				364678680E03ADC23211DF06 /* LoginItemManagerTests.swift */,
 				E5F9A6B796201569823E644D /* MonitorCanvasLayoutTests.swift */,
 				7B8F7F9A48C49B442C6CA62F /* ProfileApplicationServiceTests.swift */,
 				C65D49373D731C08C3993B7E /* ProfileRepositoryTests.swift */,
@@ -115,6 +120,7 @@
 				0810CCCBE0370E49CA0F4A54 /* DisplayLayoutNormalizer.swift */,
 				E11F9DC0F4420FDA46487664 /* DisplayMatcher.swift */,
 				72151B3538A470457F1CEEFE /* ImageLibraryService.swift */,
+				EC00FE97AF670875E3E1EC06 /* LoginItemService.swift */,
 				6474726AA9CEA7026F99CB49 /* ProfileApplicationService.swift */,
 				02D24EE1C3C9BA8289780480 /* ProfileRepository.swift */,
 				C3C6BA78696F417C14FE7757 /* SystemEventMonitor.swift */,
@@ -283,6 +289,7 @@
 				4FEADE43E0CA5F1F41A8D24E /* DisplayStore.swift in Sources */,
 				7A5C2E216801D06B6DE4A6C6 /* DotGridBackground.swift in Sources */,
 				ABA65F2A68C73FF95654D073 /* ImageLibraryService.swift in Sources */,
+				23F4E185CDB709FE84A89C21 /* LoginItemService.swift in Sources */,
 				1C90F2C635906CCA00E61E69 /* MenuBarView.swift in Sources */,
 				32D9ED2F6DB24C7C0B302473 /* MonitorCanvasLayout.swift in Sources */,
 				E7563E76F251AA35662C1563 /* PaperMonApp.swift in Sources */,
@@ -304,6 +311,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EEB673BAC07D4511229534C6 /* DisplayMatcherTests.swift in Sources */,
+				211C612A278C31AE4A023B20 /* LoginItemManagerTests.swift in Sources */,
 				6D0B41B9E3D8EC32E01F5541 /* MonitorCanvasLayoutTests.swift in Sources */,
 				8AE3A99953B5246A00862E31 /* ProfileApplicationServiceTests.swift in Sources */,
 				DBB25AD6BFB629CF40BE8FD6 /* ProfileRepositoryTests.swift in Sources */,
