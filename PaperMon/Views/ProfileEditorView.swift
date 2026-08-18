@@ -4,44 +4,25 @@ struct ProfileEditorView: View {
     @Environment(AppModel.self) private var appModel
     let profile: WallpaperProfile
     @Binding var selectedAssignmentID: DisplayAssignment.ID?
-    @State private var inspectorPresented = true
 
     var body: some View {
         VStack(spacing: 0) {
             header
-            Divider()
             DisplayCanvasView(profile: profile, selection: $selectedAssignmentID)
         }
-        .inspector(isPresented: $inspectorPresented) {
-            DisplayInspectorView(profile: profile, selectedAssignmentID: $selectedAssignmentID)
-                .inspectorColumnWidth(min: 270, ideal: 300, max: 360)
-        }
-        .toolbar {
-            ToolbarItem {
-                Button {
-                    appModel.syncSelectedProfileWithCurrentDisplays()
-                } label: {
-                    Label("Sync Displays", systemImage: "arrow.triangle.2.circlepath")
-                }
-            }
-
-            ToolbarItem {
-                Button {
-                    inspectorPresented.toggle()
-                } label: {
-                    Label("Inspector", systemImage: "sidebar.trailing")
-                }
-            }
-        }
         .onAppear {
-            if selectedAssignmentID == nil {
+            if !profile.assignments.contains(where: { $0.id == selectedAssignmentID }) {
                 selectedAssignmentID = profile.assignments.first?.id
             }
         }
     }
 
     private var header: some View {
-        HStack(alignment: .firstTextBaseline, spacing: 12) {
+        HStack(spacing: 14) {
+            Text("Current:")
+                .font(.callout.weight(.medium))
+                .foregroundStyle(Color.paperMonMuted)
+
             TextField(
                 "Profile Name",
                 text: Binding(
@@ -50,17 +31,53 @@ struct ProfileEditorView: View {
                 )
             )
             .textFieldStyle(.plain)
-            .font(.title2.weight(.semibold))
+            .font(.callout.weight(.semibold))
+            .foregroundStyle(.white)
+            .padding(.horizontal, 11)
+            .padding(.vertical, 7)
+            .frame(width: 150)
+            .background(Color.black.opacity(0.30), in: RoundedRectangle(cornerRadius: 7))
             .accessibilityLabel("Profile name")
+
+            Label("Arrangement", systemImage: "rectangle.3.group")
+                .font(.callout.weight(.semibold))
+                .foregroundStyle(Color.paperMonAccent)
+                .padding(.vertical, 10)
+                .overlay(alignment: .bottom) {
+                    Rectangle()
+                        .fill(Color.paperMonAccent)
+                        .frame(height: 2)
+                }
 
             Spacer()
 
-            Text("Drop images onto displays")
-                .font(.callout)
-                .foregroundStyle(.secondary)
+            Text("Auto-saved")
+                .font(.caption)
+                .foregroundStyle(Color.paperMonMuted)
+
+            Button {
+                appModel.syncSelectedProfileWithCurrentDisplays()
+            } label: {
+                Image(systemName: "arrow.triangle.2.circlepath")
+            }
+            .buttonStyle(.plain)
+            .foregroundStyle(Color.paperMonMuted)
+            .help("Sync connected displays")
+
+            Button("Apply") {
+                appModel.applyProfile(profile.id)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(Color.paperMonAccent)
+            .disabled(appModel.applicationStatus == .applying)
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 14)
+        .padding(.horizontal, 22)
+        .frame(height: 62)
+        .background(Color.paperMonPanel)
+        .overlay(alignment: .bottom) {
+            Rectangle()
+                .fill(Color.paperMonBorder.opacity(0.55))
+                .frame(height: 1)
+        }
     }
 }
-

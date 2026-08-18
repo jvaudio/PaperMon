@@ -2,8 +2,8 @@ import CoreGraphics
 import Foundation
 
 struct MonitorCanvasLayout: Sendable {
-    var canvasPadding: CGFloat = 52
-    var monitorGap: CGFloat = 12
+    var canvasPadding: CGFloat = 62
+    var monitorGap: CGFloat = 24
 
     func frames(
         for assignments: [DisplayAssignment],
@@ -86,4 +86,3 @@ struct MonitorCanvasLayout: Sendable {
         return min(max(candidates[candidates.count / 2], 0.5), 5)
     }
 }
-

@@ -18,7 +18,8 @@ struct PaperMonApp: App {
             ContentView()
                 .environment(appModel)
         }
-        .defaultSize(width: 1_080, height: 720)
+        .defaultSize(width: 1_360, height: 820)
+        .windowResizability(.contentMinSize)
         .commands {
             CommandMenu("Profile") {
                 Button("New Profile") {

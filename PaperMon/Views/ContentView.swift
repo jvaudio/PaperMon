@@ -8,46 +8,39 @@ struct ContentView: View {
         @Bindable var profileStore = appModel.profiles
         @Bindable var bindableAppModel = appModel
 
-        NavigationSplitView {
+        HStack(spacing: 0) {
             ProfileSidebarView(selection: $profileStore.selectedProfileID)
-                .navigationSplitViewColumnWidth(min: 190, ideal: 225, max: 300)
-        } detail: {
-            if let profile = profileStore.selectedProfile {
-                ProfileEditorView(
-                    profile: profile,
-                    selectedAssignmentID: $selectedAssignmentID
-                )
-                .id(profile.id)
-            } else {
-                EmptyProfilesView()
-            }
-        }
-        .toolbar {
-            ToolbarItemGroup {
-                Button {
-                    appModel.applySelectedProfile()
-                } label: {
-                    Label("Apply Profile", systemImage: "paintbrush.pointed")
+                .frame(width: 250)
+
+            Rectangle()
+                .fill(Color.paperMonBorder.opacity(0.55))
+                .frame(width: 1)
+
+            Group {
+                if let profile = profileStore.selectedProfile {
+                    ProfileEditorView(
+                        profile: profile,
+                        selectedAssignmentID: $selectedAssignmentID
+                    )
+                    .id(profile.id)
+                } else {
+                    EmptyProfilesView()
                 }
-                .buttonStyle(.borderedProminent)
-                .disabled(profileStore.selectedProfile == nil || appModel.applicationStatus == .applying)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+            Rectangle()
+                .fill(Color.paperMonBorder.opacity(0.55))
+                .frame(width: 1)
+
+            DisplayInspectorView(
+                profile: profileStore.selectedProfile,
+                selectedAssignmentID: $selectedAssignmentID
+            )
+            .frame(width: 310)
         }
-        .safeAreaInset(edge: .bottom) {
-            if let label = appModel.applicationStatus.label {
-                HStack(spacing: 8) {
-                    Image(systemName: statusSymbol)
-                    Text(label)
-                        .lineLimit(1)
-                    Spacer()
-                }
-                .font(.caption)
-                .foregroundStyle(statusColor)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 7)
-                .background(.bar)
-            }
-        }
+        .frame(minWidth: 1_180, minHeight: 650)
+        .background(Color.paperMonCanvas)
         .alert(item: $bindableAppModel.notice) { notice in
             Alert(title: Text(notice.title), message: Text(notice.message), dismissButton: .default(Text("OK")))
         }
@@ -59,19 +52,6 @@ struct ContentView: View {
         }
     }
 
-    private var statusSymbol: String {
-        if case .needsAttention = appModel.applicationStatus {
-            return "exclamationmark.triangle.fill"
-        }
-        return "checkmark.circle.fill"
-    }
-
-    private var statusColor: Color {
-        if case .needsAttention = appModel.applicationStatus {
-            return .orange
-        }
-        return .secondary
-    }
 }
 
 private struct EmptyProfilesView: View {

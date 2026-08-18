@@ -119,6 +119,12 @@ final class AppModel {
         }
     }
 
+    func updateDisplayName(_ name: String, for assignmentID: DisplayAssignment.ID) {
+        updateAssignment(assignmentID) { assignment in
+            assignment.displayName = name
+        }
+    }
+
     func preview(for asset: ImageAsset?) -> NSImage? {
         guard let asset,
               let access = try? imageLibrary.resolve(asset) else {
@@ -217,4 +223,3 @@ final class AppModel {
             + details.joined(separator: "\n")
     }
 }
-
