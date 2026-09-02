@@ -17,17 +17,33 @@ struct LoginItemManagerTests {
         #expect(manager.errorMessage == nil)
     }
 
-    @Test func approvalStateRemainsVisiblyRegistered() async {
+    @Test func approvalStateShowsDisabledToggleAndCanBeUnregistered() async {
         let controller = FakeLoginItemController(status: .requiresApproval)
         let manager = LoginItemManager(controller: controller)
 
         #expect(manager.status.isRegistered)
+        #expect(!manager.status.isEnabled)
 
         manager.setEnabled(false)
         await Task.yield()
 
         #expect(controller.unregisterCallCount == 1)
         #expect(manager.status == .disabled)
+    }
+
+    @Test func enablingApprovalRequiredItemOpensSystemSettings() {
+        let controller = FakeLoginItemController(status: .requiresApproval)
+        var openedSystemSettings = false
+        let manager = LoginItemManager(
+            controller: controller,
+            systemSettingsOpener: { openedSystemSettings = true }
+        )
+
+        manager.setEnabled(true)
+
+        #expect(openedSystemSettings)
+        #expect(controller.registerCallCount == 0)
+        #expect(manager.status == .requiresApproval)
     }
 
     @Test func registrationFailureIsReported() {

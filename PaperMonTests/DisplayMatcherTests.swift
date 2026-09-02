@@ -39,6 +39,24 @@ struct DisplayMatcherTests {
         #expect(result.unmatchedAssignmentIDs == [assignments[1].id])
     }
 
+    @Test func changedTVSerialStillMatchesUsingStableTraits() throws {
+        let tv = snapshot(id: 10, serial: 100, name: "LG TV (3)", x: 0, width: 3_840, height: 2_160)
+        let assignment = try #require(assignments(for: [tv]).first)
+        let reconnectedTV = snapshot(
+            id: 42,
+            serial: 999,
+            name: "LG TV (3)",
+            x: 0,
+            width: 3_840,
+            height: 2_160
+        )
+
+        let result = DisplayMatcher().match(assignments: [assignment], to: [reconnectedTV])
+
+        #expect(result.displayID(for: assignment.id) == reconnectedTV.id)
+        #expect(result.matches.first?.confidence == .probable)
+    }
+
     private func assignments(for displays: [DisplaySnapshot]) -> [DisplayAssignment] {
         let frames = DisplayLayoutNormalizer().normalizedFrames(for: displays)
         return displays.map { display in
@@ -75,4 +93,3 @@ struct DisplayMatcherTests {
         )
     }
 }
-

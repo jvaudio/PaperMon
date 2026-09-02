@@ -1,12 +1,10 @@
 import AppKit
 import SwiftUI
-import UniformTypeIdentifiers
 
 struct DisplayInspectorView: View {
     @Environment(AppModel.self) private var appModel
     let profile: WallpaperProfile?
     @Binding var selectedAssignmentID: DisplayAssignment.ID?
-    @State private var isChoosingImage = false
 
     private var assignment: DisplayAssignment? {
         guard let profile, let selectedAssignmentID else { return nil }
@@ -41,20 +39,6 @@ struct DisplayInspectorView: View {
             }
         }
         .background(Color.paperMonInspector)
-        .fileImporter(
-            isPresented: $isChoosingImage,
-            allowedContentTypes: [.image],
-            allowsMultipleSelection: false
-        ) { result in
-            switch result {
-            case let .success(urls):
-                if let url = urls.first, let assignment {
-                    appModel.assignImage(url, to: assignment.id)
-                }
-            case let .failure(error):
-                appModel.notice = AppNotice(title: "Couldn’t Open Image", message: error.localizedDescription)
-            }
-        }
     }
 
     private var inspectorHeader: some View {
@@ -153,7 +137,7 @@ struct DisplayInspectorView: View {
                 sectionTitle("CURRENT WALLPAPER")
                 Spacer()
                 Button("Change") {
-                    isChoosingImage = true
+                    appModel.chooseImage(for: assignment.id)
                 }
                 .buttonStyle(.plain)
                 .font(.caption.weight(.semibold))
@@ -194,7 +178,7 @@ struct DisplayInspectorView: View {
                 }
         } else {
             Button {
-                isChoosingImage = true
+                appModel.chooseImage(for: assignment.id)
             } label: {
                 VStack(spacing: 8) {
                     Image(systemName: "photo.badge.plus")

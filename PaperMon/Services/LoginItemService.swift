@@ -11,6 +11,10 @@ enum LoginItemStatus: Equatable, Sendable {
     var isRegistered: Bool {
         self == .enabled || self == .requiresApproval
     }
+
+    var isEnabled: Bool {
+        self == .enabled
+    }
 }
 
 protocol LoginItemControlling: AnyObject {
@@ -57,13 +61,22 @@ final class SystemLoginItemController: LoginItemControlling {
 final class LoginItemManager {
     private let controller: any LoginItemControlling
 
+    @ObservationIgnored
+    private let systemSettingsOpener: @MainActor @Sendable () -> Void
+
     private(set) var status: LoginItemStatus
     private(set) var isChanging = false
     var errorMessage: String?
 
-    init(controller: (any LoginItemControlling)? = nil) {
+    init(
+        controller: (any LoginItemControlling)? = nil,
+        systemSettingsOpener: @escaping @MainActor @Sendable () -> Void = {
+            SMAppService.openSystemSettingsLoginItems()
+        }
+    ) {
         let resolvedController = controller ?? SystemLoginItemController()
         self.controller = resolvedController
+        self.systemSettingsOpener = systemSettingsOpener
         status = resolvedController.status
     }
 
@@ -72,7 +85,18 @@ final class LoginItemManager {
     }
 
     func setEnabled(_ enabled: Bool) {
-        guard enabled != status.isRegistered, !isChanging else { return }
+        guard !isChanging else { return }
+
+        if enabled, status == .requiresApproval {
+            systemSettingsOpener()
+            return
+        }
+
+        if enabled {
+            guard status != .enabled else { return }
+        } else {
+            guard status.isRegistered else { return }
+        }
 
         isChanging = true
         errorMessage = nil
@@ -82,6 +106,9 @@ final class LoginItemManager {
                 try controller.register()
                 isChanging = false
                 refresh()
+                if status == .requiresApproval {
+                    systemSettingsOpener()
+                }
             } catch {
                 isChanging = false
                 errorMessage = error.localizedDescription
@@ -100,6 +127,6 @@ final class LoginItemManager {
     }
 
     func openSystemSettings() {
-        SMAppService.openSystemSettingsLoginItems()
+        systemSettingsOpener()
     }
 }

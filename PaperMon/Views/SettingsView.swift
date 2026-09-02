@@ -13,7 +13,7 @@ struct SettingsView: View {
                 Toggle(
                     "Open PaperMon at login",
                     isOn: Binding(
-                        get: { loginItemManager.status.isRegistered },
+                        get: { loginItemManager.status.isEnabled },
                         set: { loginItemManager.setEnabled($0) }
                     )
                 )

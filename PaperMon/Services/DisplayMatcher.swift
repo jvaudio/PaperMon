@@ -74,7 +74,7 @@ struct DisplayMatcher: Sendable {
                     assignmentID: assignment.id,
                     displayID: best.display.id,
                     score: best.score,
-                    confidence: exactHardwareMatch || best.score >= 88 ? .exact : .probable
+                    confidence: exactHardwareMatch ? .exact : .probable
                 )
             )
             availableDisplays.removeAll { $0.id == best.display.id }
@@ -97,11 +97,14 @@ struct DisplayMatcher: Sendable {
         let current = display.fingerprint
         var score = 0.0
 
-        if let savedKey = saved.hardwareKey, let currentKey = current.hardwareKey {
-            score += savedKey == currentKey ? 100 : -80
-        } else {
-            if saved.vendorNumber != nil, saved.vendorNumber == current.vendorNumber { score += 20 }
-            if saved.modelNumber != nil, saved.modelNumber == current.modelNumber { score += 25 }
+        if saved.vendorNumber != nil, saved.vendorNumber == current.vendorNumber { score += 20 }
+        if saved.modelNumber != nil, saved.modelNumber == current.modelNumber { score += 25 }
+
+        if let savedSerial = saved.serialNumber, let currentSerial = current.serialNumber {
+            // Some TVs and adapters expose a synthesized serial that can change after a
+            // restart. Treat an exact serial as strong evidence, but let the remaining
+            // physical and layout traits recover from a changed value.
+            score += savedSerial == currentSerial ? 55 : -25
         }
 
         if saved.localizedName.caseInsensitiveCompare(current.localizedName) == .orderedSame {
@@ -129,4 +132,3 @@ struct DisplayMatcher: Sendable {
         return score
     }
 }
-

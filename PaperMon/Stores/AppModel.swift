@@ -1,6 +1,7 @@
 import AppKit
 import Foundation
 import Observation
+import UniformTypeIdentifiers
 
 @Observable
 @MainActor
@@ -104,6 +105,34 @@ final class AppModel {
             profiles.updateProfile(profile)
         } catch {
             notice = AppNotice(title: "Couldn’t Add Image", message: error.localizedDescription)
+        }
+    }
+
+    func chooseImage(for assignmentID: DisplayAssignment.ID) {
+        guard let profile = profiles.selectedProfile,
+              let assignment = profile.assignments.first(where: { $0.id == assignmentID }) else {
+            return
+        }
+
+        let currentImageAccess = assignment.image.flatMap { try? imageLibrary.resolve($0) }
+        let panel = NSOpenPanel()
+        panel.allowedContentTypes = [.image]
+        panel.allowsMultipleSelection = false
+        panel.canChooseDirectories = false
+        panel.canChooseFiles = true
+
+        if let currentURL = currentImageAccess?.url {
+            panel.directoryURL = currentURL.deletingLastPathComponent()
+            panel.nameFieldStringValue = currentURL.lastPathComponent
+        }
+
+        panel.begin { [weak self, currentImageAccess] response in
+            // Keep security-scoped access alive while the panel displays its folder.
+            _ = currentImageAccess
+            guard response == .OK, let url = panel.url else { return }
+            Task { @MainActor [weak self] in
+                self?.assignImage(url, to: assignmentID)
+            }
         }
     }
 
