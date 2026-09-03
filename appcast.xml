@@ -1,9 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
-  <channel>
-    <title>PaperMon Updates</title>
-    <link>https://raw.githubusercontent.com/jvaudio/PaperMon/main/appcast.xml</link>
-    <description>Stable PaperMon releases</description>
-    <language>en</language>
-  </channel>
+<?xml version="1.0" standalone="yes"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+    <channel>
+        <title>PaperMon</title>
+        <item>
+            <title>1.0.2</title>
+            <pubDate>Thu, 03 Sep 2026 16:48:25 -0500</pubDate>
+            <sparkle:version>3</sparkle:version>
+            <sparkle:shortVersionString>1.0.2</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/jvaudio/PaperMon/releases/download/v1.0.2/PaperMon-1.0.2.dmg" length="4557023" type="application/octet-stream" sparkle:edSignature="OxH7JBzbhMzpM0LEamrTM/UMBtKfs96izziItaxNDJ6XDs2Pee9znIxcQWpiYpEwXukYCspjxK5x//M8/pjRBg=="/>
+        </item>
+    </channel>
 </rss>
