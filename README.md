@@ -14,6 +14,7 @@ PaperMon is a native macOS wallpaper profile manager for multi-monitor desks. It
 - Restores the active profile after launch, wake, or display reconfiguration.
 - Optionally opens at login and reports when macOS requires approval in System Settings.
 - Switches profiles from a concise menu-bar menu.
+- Checks automatically for signed releases, installs verified updates in the background, and supports manual checks from Settings or the application menu.
 
 PaperMon remembers display orientation for matching and layout. It intentionally does not change macOS display rotation.
 
@@ -36,7 +37,7 @@ Useful modes:
 
 The resulting bundle is written to `dist/PaperMon.app`. The repository also includes `PaperMon.xcodeproj` and `project.yml` for Xcode signing and release work.
 
-Release candidates are produced by `script/package_release.sh`. See the [release process](Documentation/ReleaseProcess.md) for local validation, Developer ID signing, notarization, and DMG verification.
+Release candidates are produced by `script/package_release.sh`. See the [release process](Documentation/ReleaseProcess.md) for local validation, Developer ID signing, notarization, Sparkle appcast generation, and DMG verification.
 
 ## Test
 

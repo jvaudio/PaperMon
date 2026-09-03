@@ -147,17 +147,25 @@ struct DisplayInspectorView: View {
             wallpaperPreview(assignment)
 
             if let image = assignment.image {
-                Text(image.displayName)
-                    .font(.caption)
-                    .foregroundStyle(Color.paperMonMuted)
-                    .lineLimit(1)
+                HStack(spacing: 8) {
+                    Text(image.displayName)
+                        .font(.caption)
+                        .foregroundStyle(Color.paperMonMuted)
+                        .lineLimit(1)
 
-                Button("Remove Wallpaper", role: .destructive) {
-                    appModel.removeImage(from: assignment.id)
+                    Spacer(minLength: 0)
+
+                    Button(role: .destructive) {
+                        appModel.removeImage(from: assignment.id)
+                    } label: {
+                        Image(systemName: "trash")
+                            .font(.caption.weight(.semibold))
+                    }
+                    .buttonStyle(.plain)
+                    .foregroundStyle(.red.opacity(0.9))
+                    .help("Remove wallpaper")
+                    .accessibilityLabel("Remove wallpaper")
                 }
-                .buttonStyle(.plain)
-                .font(.caption.weight(.medium))
-                .foregroundStyle(.red.opacity(0.9))
             }
         }
     }

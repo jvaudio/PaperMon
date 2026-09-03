@@ -1,6 +1,9 @@
+import Sparkle
 import SwiftUI
 
 struct SettingsView: View {
+    let updaterController: SPUStandardUpdaterController
+
     @Environment(\.scenePhase) private var scenePhase
     @AppStorage("restoreActiveProfileOnLaunch") private var restoreOnLaunch = true
     @AppStorage("restoreActiveProfileOnDisplayChange") private var restoreOnDisplayChange = true
@@ -9,6 +12,19 @@ struct SettingsView: View {
 
     var body: some View {
         Form {
+            Section("About") {
+                LabeledContent("Current version", value: AppVersionInfo().displayValue)
+
+                Button("Check for Updates…") {
+                    updaterController.checkForUpdates(nil)
+                }
+                .disabled(!updaterController.updater.canCheckForUpdates)
+
+                Text("PaperMon checks for new versions automatically and installs available updates in the background.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
             Section("Startup") {
                 Toggle(
                     "Open PaperMon at login",
@@ -52,9 +68,10 @@ struct SettingsView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
+
         }
         .formStyle(.grouped)
-        .frame(width: 560, height: 440)
+        .frame(width: 560, height: 570)
         .navigationTitle("PaperMon Settings")
         .onChange(of: scenePhase) { _, newPhase in
             if newPhase == .active {

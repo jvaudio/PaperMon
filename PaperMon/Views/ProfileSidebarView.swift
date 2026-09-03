@@ -85,15 +85,11 @@ struct ProfileSidebarView: View {
 
     private var brandHeader: some View {
         HStack(spacing: 12) {
-            Image(systemName: "photo.on.rectangle.angled")
-                .font(.title2.weight(.medium))
-                .foregroundStyle(Color.paperMonAccent)
+            Image("PaperMonIcon")
+                .resizable()
+                .scaledToFit()
                 .frame(width: 40, height: 40)
-                .background(Color.paperMonAccent.opacity(0.13), in: RoundedRectangle(cornerRadius: 9))
-                .overlay {
-                    RoundedRectangle(cornerRadius: 9)
-                        .stroke(Color.paperMonAccent.opacity(0.48), lineWidth: 1)
-                }
+                .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: 3) {
                 Text("PaperMon")

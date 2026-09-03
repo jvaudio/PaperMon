@@ -6,6 +6,7 @@ APP_NAME="PaperMon"
 ENTITLEMENTS="$ROOT_DIR/PaperMon/PaperMon.entitlements"
 INFO_PLIST_SOURCE="$ROOT_DIR/Packaging/Info.plist"
 OUTPUT_DIR="$ROOT_DIR/dist/release"
+ASSET_CATALOG="$ROOT_DIR/PaperMon/Resources/Assets.xcassets"
 
 IDENTITY=""
 NOTARY_PROFILE=""
@@ -93,6 +94,8 @@ ARM64_SCRATCH="$WORK_DIR/arm64"
 X86_64_SCRATCH="$WORK_DIR/x86_64"
 STAGED_APP="$WORK_DIR/$APP_NAME.app"
 STAGED_BINARY="$STAGED_APP/Contents/MacOS/$APP_NAME"
+STAGED_FRAMEWORKS="$STAGED_APP/Contents/Frameworks"
+STAGED_RESOURCES="$STAGED_APP/Contents/Resources"
 DMG_ROOT="$WORK_DIR/dmg"
 OUTPUT_APP="$OUTPUT_DIR/$APP_NAME-$VERSION.app"
 OUTPUT_DMG="$OUTPUT_DIR/$APP_NAME-$VERSION.dmg"
@@ -115,9 +118,23 @@ swift build \
 
 ARM64_BIN_DIR="$(swift build --package-path "$ROOT_DIR" --configuration release --scratch-path "$ARM64_SCRATCH" --triple arm64-apple-macosx14.0 --show-bin-path)"
 X86_64_BIN_DIR="$(swift build --package-path "$ROOT_DIR" --configuration release --scratch-path "$X86_64_SCRATCH" --triple x86_64-apple-macosx14.0 --show-bin-path)"
+SPARKLE_ARTIFACT_DIR="$ARM64_SCRATCH/artifacts/sparkle/Sparkle"
+SPARKLE_FRAMEWORK_SOURCE="$SPARKLE_ARTIFACT_DIR/Sparkle.xcframework/macos-arm64_x86_64/Sparkle.framework"
+GENERATE_APPCAST="$SPARKLE_ARTIFACT_DIR/bin/generate_appcast"
 
-mkdir -p "$STAGED_APP/Contents/MacOS"
+mkdir -p "$STAGED_APP/Contents/MacOS" "$STAGED_FRAMEWORKS" "$STAGED_RESOURCES"
 cp "$INFO_PLIST_SOURCE" "$STAGED_APP/Contents/Info.plist"
+ditto "$SPARKLE_FRAMEWORK_SOURCE" "$STAGED_FRAMEWORKS/Sparkle.framework"
+xcrun actool "$ASSET_CATALOG" \
+  --compile "$STAGED_RESOURCES" \
+  --platform macosx \
+  --minimum-deployment-target 14.0 \
+  --target-device mac \
+  --app-icon AppIcon \
+  --output-partial-info-plist "$WORK_DIR/assetcatalog-info.plist" \
+  --output-format human-readable-text \
+  --notices \
+  --warnings
 lipo -create \
   "$ARM64_BIN_DIR/$APP_NAME" \
   "$X86_64_BIN_DIR/$APP_NAME" \
@@ -125,6 +142,18 @@ lipo -create \
 chmod +x "$STAGED_BINARY"
 plutil -replace CFBundleShortVersionString -string "$VERSION" "$STAGED_APP/Contents/Info.plist"
 plutil -replace CFBundleVersion -string "$BUILD_NUMBER" "$STAGED_APP/Contents/Info.plist"
+
+SPARKLE_FRAMEWORK="$STAGED_FRAMEWORKS/Sparkle.framework"
+SPARKLE_CODESIGN_ARGS=(--force --sign "$IDENTITY" --options runtime)
+if [[ $AD_HOC -eq 0 ]]; then
+  SPARKLE_CODESIGN_ARGS+=(--timestamp)
+fi
+
+codesign "${SPARKLE_CODESIGN_ARGS[@]}" --preserve-metadata=entitlements "$SPARKLE_FRAMEWORK/Versions/B/XPCServices/Installer.xpc"
+codesign "${SPARKLE_CODESIGN_ARGS[@]}" --preserve-metadata=entitlements "$SPARKLE_FRAMEWORK/Versions/B/XPCServices/Downloader.xpc"
+codesign "${SPARKLE_CODESIGN_ARGS[@]}" --preserve-metadata=entitlements "$SPARKLE_FRAMEWORK/Versions/B/Autoupdate"
+codesign "${SPARKLE_CODESIGN_ARGS[@]}" --preserve-metadata=entitlements "$SPARKLE_FRAMEWORK/Versions/B/Updater.app"
+codesign "${SPARKLE_CODESIGN_ARGS[@]}" "$SPARKLE_FRAMEWORK"
 
 if [[ $AD_HOC -eq 1 ]]; then
   codesign \
@@ -180,6 +209,16 @@ fi
 rm -rf "$OUTPUT_APP"
 ditto "$STAGED_APP" "$OUTPUT_APP"
 
+if [[ $AD_HOC -eq 0 ]]; then
+  APPCAST_DIR="$WORK_DIR/appcast"
+  mkdir -p "$APPCAST_DIR"
+  ditto "$OUTPUT_DMG" "$APPCAST_DIR/$(basename "$OUTPUT_DMG")"
+  "$GENERATE_APPCAST" \
+    --download-url-prefix "https://github.com/jvaudio/PaperMon/releases/download/v$VERSION/" \
+    "$APPCAST_DIR"
+  ditto "$APPCAST_DIR/appcast.xml" "$ROOT_DIR/appcast.xml"
+fi
+
 echo
 echo "Release artifacts:"
 echo "  $OUTPUT_APP"
@@ -192,4 +231,9 @@ elif [[ -z "$NOTARY_PROFILE" ]]; then
   echo "Developer ID signed build complete. Notarization was skipped because no keychain profile was provided."
 else
   echo "Developer ID signed and notarized release complete."
+fi
+
+if [[ $AD_HOC -eq 0 ]]; then
+  echo "  $ROOT_DIR/appcast.xml"
+  echo "Publish the DMG in GitHub release v$VERSION, then commit and push appcast.xml."
 fi

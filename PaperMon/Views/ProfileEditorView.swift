@@ -62,11 +62,21 @@ struct ProfileEditorView: View {
             .foregroundStyle(Color.paperMonMuted)
             .help("Sync connected displays")
 
-            Button("Apply") {
+            Button {
                 appModel.applyProfile(profile.id)
+            } label: {
+                Text("Apply")
+                    .font(.callout.weight(.medium))
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
             }
-            .buttonStyle(.borderedProminent)
-            .tint(Color.paperMonAccent)
+            .buttonStyle(.plain)
+            .foregroundStyle(Color.paperMonAccent)
+            .background(Color.paperMonAccent.opacity(0.13), in: RoundedRectangle(cornerRadius: 7))
+            .overlay {
+                RoundedRectangle(cornerRadius: 7)
+                    .stroke(Color.paperMonAccent.opacity(0.48), lineWidth: 1)
+            }
             .disabled(appModel.applicationStatus == .applying)
         }
         .padding(.horizontal, 22)

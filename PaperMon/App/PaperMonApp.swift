@@ -1,4 +1,5 @@
 import AppKit
+import Sparkle
 import SwiftUI
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
@@ -12,8 +13,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 struct PaperMonApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @State private var appModel: AppModel
+    private let updaterController: SPUStandardUpdaterController
 
     init() {
+        updaterController = SPUStandardUpdaterController(
+            startingUpdater: true,
+            updaterDelegate: nil,
+            userDriverDelegate: nil
+        )
+
         var migrationError: Error?
         let imageLibrary = ImageLibraryService()
 
@@ -49,6 +57,13 @@ struct PaperMonApp: App {
         .defaultSize(width: 1_360, height: 820)
         .windowResizability(.contentMinSize)
         .commands {
+            CommandGroup(after: .appInfo) {
+                Button("Check for Updates…") {
+                    updaterController.checkForUpdates(nil)
+                }
+                .disabled(!updaterController.updater.canCheckForUpdates)
+            }
+
             CommandMenu("Profile") {
                 Button("New Profile") {
                     appModel.createProfile()
@@ -69,8 +84,10 @@ struct PaperMonApp: App {
         }
 
         Settings {
-            SettingsView()
+            SettingsView(updaterController: updaterController)
                 .environment(appModel)
         }
+        .defaultSize(width: 560, height: 570)
+        .windowResizability(.contentSize)
     }
 }
