@@ -51,9 +51,7 @@ struct ProfileEditorView: View {
 
             Spacer()
 
-            Text("Auto-saved")
-                .font(.caption)
-                .foregroundStyle(Color.paperMonMuted)
+            applicationStatus
 
             Button {
                 appModel.syncSelectedProfileWithCurrentDisplays()
@@ -78,6 +76,28 @@ struct ProfileEditorView: View {
             Rectangle()
                 .fill(Color.paperMonBorder.opacity(0.55))
                 .frame(height: 1)
+        }
+    }
+
+    @ViewBuilder
+    private var applicationStatus: some View {
+        switch appModel.applicationStatus {
+        case .idle:
+            Text("Auto-saved")
+                .foregroundStyle(Color.paperMonMuted)
+        case .applying:
+            HStack(spacing: 6) {
+                ProgressView()
+                    .controlSize(.small)
+                Text("Applying…")
+            }
+            .foregroundStyle(Color.paperMonMuted)
+        case let .applied(message):
+            Label(message, systemImage: "checkmark.circle.fill")
+                .foregroundStyle(Color.paperMonAccent)
+        case .needsAttention:
+            Label("Needs attention", systemImage: "exclamationmark.triangle.fill")
+                .foregroundStyle(.orange)
         }
     }
 }

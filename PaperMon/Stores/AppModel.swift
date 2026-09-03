@@ -1,7 +1,10 @@
 import AppKit
 import Foundation
 import Observation
+import OSLog
 import UniformTypeIdentifiers
+
+private let applicationLogger = Logger(subsystem: "com.papermon.app", category: "Application")
 
 @Observable
 @MainActor
@@ -17,6 +20,7 @@ final class AppModel {
     @ObservationIgnored private let applicationService: ProfileApplicationService
     @ObservationIgnored private var systemEventMonitor: SystemEventMonitor?
     @ObservationIgnored private var displayChangeTask: Task<Void, Never>?
+    @ObservationIgnored private var profileApplicationTask: Task<Void, Never>?
     @ObservationIgnored private var hasStarted = false
 
     init(
@@ -37,12 +41,22 @@ final class AppModel {
     }
 
     func startIfNeeded() {
-        guard !hasStarted else { return }
+        guard !hasStarted else {
+            applicationLogger.debug("Ignoring duplicate application start")
+            return
+        }
         hasStarted = true
         displays.refresh()
 
-        if UserDefaults.standard.object(forKey: "restoreActiveProfileOnLaunch") as? Bool ?? true,
-           let activeProfileID = profiles.library.activeProfileID {
+        let restoresOnLaunch = UserDefaults.standard.object(
+            forKey: "restoreActiveProfileOnLaunch"
+        ) as? Bool ?? true
+        applicationLogger.info(
+            "Application started; restore active profile: \(restoresOnLaunch, privacy: .public)"
+        )
+
+        if restoresOnLaunch, let activeProfileID = profiles.library.activeProfileID {
+            applicationLogger.info("Restoring active profile on launch")
             applyProfile(activeProfileID, showsSuccessNotice: false)
         }
     }
@@ -168,11 +182,36 @@ final class AppModel {
     }
 
     func applyProfile(_ profileID: WallpaperProfile.ID, showsSuccessNotice: Bool = true) {
-        guard let profile = profile(withID: profileID) else { return }
+        applicationLogger.info("Profile application requested")
+        guard applicationStatus != .applying else {
+            applicationLogger.info("Ignoring profile request because another application is running")
+            return
+        }
+        guard let profile = profile(withID: profileID) else {
+            applicationLogger.error("Ignoring profile request because the profile no longer exists")
+            return
+        }
         displays.refresh()
         applicationStatus = .applying
+        applicationLogger.info(
+            "Applying profile to \(profile.assignments.count, privacy: .public) assignments"
+        )
 
-        let result = applicationService.apply(profile, to: displays.displays)
+        let connectedDisplays = displays.displays
+        profileApplicationTask = Task { [weak self] in
+            guard let self else { return }
+            let result = await applicationService.apply(profile, to: connectedDisplays)
+            guard !Task.isCancelled else { return }
+            finishApplying(profile, result: result, showsSuccessNotice: showsSuccessNotice)
+            profileApplicationTask = nil
+        }
+    }
+
+    private func finishApplying(
+        _ profile: WallpaperProfile,
+        result: ProfileApplicationResult,
+        showsSuccessNotice: Bool
+    ) {
         let issueCount = result.unavailableDisplayNames.count
             + result.ambiguousDisplayNames.count
             + result.missingImageDisplayNames.count
@@ -182,11 +221,17 @@ final class AppModel {
             profiles.setActiveProfile(profile.id)
             profiles.selectedProfileID = profile.id
             applicationStatus = .applied("Applied \(profile.name)")
+            applicationLogger.info(
+                "Profile application completed for \(result.appliedDisplayNames.count, privacy: .public) displays"
+            )
             return
         }
 
         let summary = applicationSummary(for: profile, result: result)
         applicationStatus = .needsAttention(summary)
+        applicationLogger.error(
+            "Profile application needs attention; issue count: \(issueCount, privacy: .public)"
+        )
         if showsSuccessNotice || issueCount > 0 {
             notice = AppNotice(title: "Profile Needs Attention", message: summary)
         }

@@ -50,10 +50,11 @@ Before a beta or release, complete the [hardware acceptance checklist](Documenta
 
 ## Storage
 
-Profile metadata is stored under the user’s Application Support directory. Managed images are copied into the adjacent `PaperMon/Images` directory. Referenced originals use security-scoped bookmarks so access can survive relaunches and restarts.
+Profile metadata and managed images are stored in `~/Pictures/PaperMon`, where PaperMon and macOS's wallpaper service can both read them. Referenced originals use security-scoped bookmarks so access can survive relaunches and restarts. PaperMon migrates profiles and managed images from its earlier container-based library automatically when upgrading through the migration build.
 
 ## Release limitations
 
 - Real hardware verification is still required across identical monitor models, DisplayLink docks, Sidecar, sleep/wake, and cable or port changes.
-- Per-Space wallpapers, animated wallpapers, display rotation, scheduling, and cloud sync are not part of this MVP.
+- Independently authoring different wallpapers for individual Spaces, animated wallpapers, display rotation, scheduling, and cloud sync are not part of this MVP.
 - Release distribution still requires a Developer ID or Mac App Store signing identity and notarization.
+- On macOS 27, PaperMon applies the profile to the wallpaper store by stable display UUID and mirrors each assignment across that display's Spaces. This avoids the system API's identity collision when multiple monitors report the same EDID serial number.

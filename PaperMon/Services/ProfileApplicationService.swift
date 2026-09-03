@@ -33,7 +33,7 @@ struct ProfileApplicationService {
         self.wallpaperService = wallpaperService ?? WallpaperService()
     }
 
-    func apply(_ profile: WallpaperProfile, to displays: [DisplaySnapshot]) -> ProfileApplicationResult {
+    func apply(_ profile: WallpaperProfile, to displays: [DisplaySnapshot]) async -> ProfileApplicationResult {
         let matchResult = matcher.match(assignments: profile.assignments, to: displays)
         var result = ProfileApplicationResult()
         var resolvedImages: [DisplayAssignment.ID: ResolvedImageAccess] = [:]
@@ -64,6 +64,8 @@ struct ProfileApplicationService {
         guard result.failures.isEmpty else { return result }
 
         var previousStates: [(displayID: UInt32, state: DesktopWallpaperState)] = []
+        var requests: [WallpaperRequest] = []
+        var requestedDisplayNames: [String] = []
 
         for assignment in profile.assignments {
             guard let displayID = matchResult.displayID(for: assignment.id),
@@ -75,28 +77,31 @@ struct ProfileApplicationService {
                 previousStates.append((displayID, state))
             }
 
-            do {
-                try wallpaperService.apply(
+            requests.append(
+                WallpaperRequest(
+                    displayID: displayID,
                     imageURL: resolvedImage.url,
-                    presentation: assignment.presentation,
-                    to: displayID
+                    presentation: assignment.presentation
                 )
-                result.appliedDisplayNames.append(assignment.displayName)
-            } catch {
-                result.failures.append("\(assignment.displayName): \(error.localizedDescription)")
-                rollback(previousStates)
-                result.rolledBack = true
-                result.appliedDisplayNames.removeAll()
-                break
-            }
+            )
+            requestedDisplayNames.append(assignment.displayName)
+        }
+
+        do {
+            try await wallpaperService.apply(requests)
+            result.appliedDisplayNames = requestedDisplayNames
+        } catch {
+            result.failures.append(error.localizedDescription)
+            await rollback(previousStates)
+            result.rolledBack = true
         }
 
         return result
     }
 
-    private func rollback(_ states: [(displayID: UInt32, state: DesktopWallpaperState)]) {
+    private func rollback(_ states: [(displayID: UInt32, state: DesktopWallpaperState)]) async {
         for previous in states.reversed() {
-            try? wallpaperService.restore(previous.state, to: previous.displayID)
+            try? await wallpaperService.restore(previous.state, to: previous.displayID)
         }
     }
 }

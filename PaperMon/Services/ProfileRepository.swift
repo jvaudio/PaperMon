@@ -45,6 +45,11 @@ struct ProfileRepository: Sendable {
     }
 
     static func defaultLibraryURL(fileManager: FileManager = .default) -> URL {
+        ImageLibraryService.defaultImagesDirectory(fileManager: fileManager)
+            .appendingPathComponent("profiles.json", isDirectory: false)
+    }
+
+    static func legacyLibraryURL(fileManager: FileManager = .default) -> URL {
         let applicationSupport = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
         return applicationSupport
             .appendingPathComponent("PaperMon", isDirectory: true)

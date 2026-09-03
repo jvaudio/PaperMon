@@ -37,7 +37,7 @@ Use the exact identity name reported by `security find-identity -v -p codesignin
 The script performs these gates in order:
 
 1. Builds a Release app for Apple Silicon and Intel.
-2. Applies the App Sandbox entitlements and hardened runtime.
+2. Applies PaperMon's minimal entitlements and the hardened runtime. Direct distribution intentionally does not use App Sandbox because macOS's wallpaper helper must open each managed image independently.
 3. Performs strict signature validation.
 4. Submits the app for notarization and staples its ticket.
 5. Creates and signs a DMG containing PaperMon and an Applications shortcut.

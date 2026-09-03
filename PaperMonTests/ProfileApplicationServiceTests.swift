@@ -5,7 +5,7 @@ import Testing
 
 @MainActor
 struct ProfileApplicationServiceTests {
-    @Test func appliesEveryMatchedWallpaper() throws {
+    @Test func appliesEveryMatchedWallpaper() async throws {
         let fixture = try makeFixture()
         let wallpaperService = FakeWallpaperService()
         let service = ProfileApplicationService(
@@ -13,13 +13,13 @@ struct ProfileApplicationServiceTests {
             wallpaperService: wallpaperService
         )
 
-        let result = service.apply(fixture.profile, to: fixture.displays)
+        let result = await service.apply(fixture.profile, to: fixture.displays)
 
         #expect(result.isCompleteSuccess)
         #expect(wallpaperService.appliedDisplayIDs == [10, 11])
     }
 
-    @Test func rollsBackPreviouslyAppliedWallpapersWhenOneFails() throws {
+    @Test func rollsBackPreviouslyAppliedWallpapersWhenOneFails() async throws {
         let fixture = try makeFixture()
         let wallpaperService = FakeWallpaperService(failingDisplayID: 11)
         let service = ProfileApplicationService(
@@ -27,7 +27,7 @@ struct ProfileApplicationServiceTests {
             wallpaperService: wallpaperService
         )
 
-        let result = service.apply(fixture.profile, to: fixture.displays)
+        let result = await service.apply(fixture.profile, to: fixture.displays)
 
         #expect(result.rolledBack)
         #expect(result.appliedDisplayNames.isEmpty)
@@ -113,14 +113,14 @@ private final class FakeWallpaperService: WallpaperApplying {
         )
     }
 
-    func apply(imageURL: URL, presentation: WallpaperPresentation, to displayID: UInt32) throws {
+    func apply(imageURL: URL, presentation: WallpaperPresentation, to displayID: UInt32) async throws {
         if displayID == failingDisplayID {
             throw FakeWallpaperError.expectedFailure
         }
         appliedDisplayIDs.append(displayID)
     }
 
-    func restore(_ state: DesktopWallpaperState, to displayID: UInt32) throws {
+    func restore(_ state: DesktopWallpaperState, to displayID: UInt32) async throws {
         restoredDisplayIDs.append(displayID)
     }
 }
@@ -128,4 +128,3 @@ private final class FakeWallpaperService: WallpaperApplying {
 private enum FakeWallpaperError: Error {
     case expectedFailure
 }
-
