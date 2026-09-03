@@ -164,39 +164,68 @@ struct DisplayInspectorView: View {
 
     @ViewBuilder
     private func wallpaperPreview(_ assignment: DisplayAssignment) -> some View {
-        if let preview = appModel.preview(for: assignment.image) {
-            Image(nsImage: preview)
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(maxWidth: .infinity)
-                .frame(height: 118)
-                .clipped()
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-                .overlay {
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(Color.paperMonBorder, lineWidth: 1)
+        let previewSize = wallpaperPreviewSize(for: assignment)
+
+        HStack {
+            Spacer(minLength: 0)
+
+            if let preview = appModel.preview(for: assignment.image) {
+                Image(nsImage: preview)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: previewSize.width, height: previewSize.height)
+                    .clipped()
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(Color.paperMonBorder, lineWidth: 1)
+                    }
+            } else {
+                Button {
+                    appModel.chooseImage(for: assignment.id)
+                } label: {
+                    VStack(spacing: 8) {
+                        Image(systemName: "photo.badge.plus")
+                            .font(.title2)
+                        Text("Choose a wallpaper")
+                            .font(.caption.weight(.medium))
+                    }
+                    .foregroundStyle(Color.paperMonMuted)
+                    .frame(width: previewSize.width, height: previewSize.height)
+                    .background(Color.paperMonPanel, in: RoundedRectangle(cornerRadius: 8))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(Color.paperMonBorder, style: StrokeStyle(lineWidth: 1, dash: [5]))
+                    }
                 }
-        } else {
-            Button {
-                appModel.chooseImage(for: assignment.id)
-            } label: {
-                VStack(spacing: 8) {
-                    Image(systemName: "photo.badge.plus")
-                        .font(.title2)
-                    Text("Choose a wallpaper")
-                        .font(.caption.weight(.medium))
-                }
-                .foregroundStyle(Color.paperMonMuted)
-                .frame(maxWidth: .infinity)
-                .frame(height: 118)
-                .background(Color.paperMonPanel, in: RoundedRectangle(cornerRadius: 8))
-                .overlay {
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(Color.paperMonBorder, style: StrokeStyle(lineWidth: 1, dash: [5]))
-                }
+                .buttonStyle(.plain)
             }
-            .buttonStyle(.plain)
+
+            Spacer(minLength: 0)
         }
+        .frame(maxWidth: .infinity)
+    }
+
+    private func wallpaperPreviewSize(for assignment: DisplayAssignment) -> CGSize {
+        let pixelWidth = CGFloat(max(assignment.fingerprint.pixelWidth, 1))
+        let pixelHeight = CGFloat(max(assignment.fingerprint.pixelHeight, 1))
+        let rawAspectRatio = pixelWidth / pixelHeight
+        let aspectRatio: CGFloat
+
+        switch assignment.fingerprint.orientation {
+        case .landscape:
+            aspectRatio = max(rawAspectRatio, 1 / rawAspectRatio)
+        case .portrait:
+            aspectRatio = min(rawAspectRatio, 1 / rawAspectRatio)
+        case .square:
+            aspectRatio = 1
+        }
+
+        let maximumSize = CGSize(width: 270, height: 180)
+        if aspectRatio >= maximumSize.width / maximumSize.height {
+            return CGSize(width: maximumSize.width, height: maximumSize.width / aspectRatio)
+        }
+        return CGSize(width: maximumSize.height * aspectRatio, height: maximumSize.height)
     }
 
     private func sectionTitle(_ title: String) -> some View {

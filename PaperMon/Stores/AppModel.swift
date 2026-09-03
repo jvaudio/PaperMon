@@ -65,10 +65,14 @@ final class AppModel {
         displays.refresh()
         let normalizedFrames = normalizer.normalizedFrames(for: displays.displays)
         let assignments = displays.displays.map { display in
-            DisplayAssignment(
-                displayName: display.fingerprint.localizedName,
+            let normalizedFrame = normalizedFrames[display.id] ?? .zero
+            return DisplayAssignment(
+                displayName: profiles.displayName(
+                    for: display.fingerprint,
+                    normalizedFrame: normalizedFrame
+                ) ?? display.fingerprint.localizedName,
                 fingerprint: display.fingerprint,
-                normalizedFrame: normalizedFrames[display.id] ?? .zero
+                normalizedFrame: normalizedFrame
             )
         }
         _ = profiles.createProfile(name: "New Profile", assignments: assignments)
@@ -89,10 +93,14 @@ final class AppModel {
         let additions = displays.displays
             .filter { result.unmatchedDisplayIDs.contains($0.id) }
             .map { display in
-                DisplayAssignment(
-                    displayName: display.fingerprint.localizedName,
+                let normalizedFrame = normalizedFrames[display.id] ?? .zero
+                return DisplayAssignment(
+                    displayName: profiles.displayName(
+                        for: display.fingerprint,
+                        normalizedFrame: normalizedFrame
+                    ) ?? display.fingerprint.localizedName,
                     fingerprint: display.fingerprint,
-                    normalizedFrame: normalizedFrames[display.id] ?? .zero
+                    normalizedFrame: normalizedFrame
                 )
             }
 
@@ -163,9 +171,10 @@ final class AppModel {
     }
 
     func updateDisplayName(_ name: String, for assignmentID: DisplayAssignment.ID) {
-        updateAssignment(assignmentID) { assignment in
-            assignment.displayName = name
+        guard let assignment = profiles.selectedProfile?.assignments.first(where: { $0.id == assignmentID }) else {
+            return
         }
+        profiles.updateDisplayName(name, matching: assignment)
     }
 
     func preview(for asset: ImageAsset?) -> NSImage? {

@@ -55,6 +55,55 @@ final class ProfileStore {
         persist()
     }
 
+    func updateDisplayName(_ name: String, matching source: DisplayAssignment) {
+        var changedProfileIDs = Set<WallpaperProfile.ID>()
+
+        for profileIndex in library.profiles.indices {
+            guard let assignmentIndex = matchingAssignmentIndex(
+                for: source,
+                in: library.profiles[profileIndex].assignments
+            ), library.profiles[profileIndex].assignments[assignmentIndex].displayName != name else {
+                continue
+            }
+
+            library.profiles[profileIndex].assignments[assignmentIndex].displayName = name
+            changedProfileIDs.insert(library.profiles[profileIndex].id)
+        }
+
+        guard !changedProfileIDs.isEmpty else { return }
+
+        for profileIndex in library.profiles.indices
+        where changedProfileIDs.contains(library.profiles[profileIndex].id) {
+            library.profiles[profileIndex].markUpdated()
+        }
+        persist()
+    }
+
+    func displayName(
+        for fingerprint: DisplayFingerprint,
+        normalizedFrame: DisplayFrame
+    ) -> String? {
+        let source = DisplayAssignment(
+            displayName: fingerprint.localizedName,
+            fingerprint: fingerprint,
+            normalizedFrame: normalizedFrame
+        )
+        let preferredProfileIDs = [selectedProfileID, library.activeProfileID].compactMap { $0 }
+        let orderedProfiles = library.profiles.sorted { lhs, rhs in
+            let lhsPriority = preferredProfileIDs.firstIndex(of: lhs.id) ?? preferredProfileIDs.count
+            let rhsPriority = preferredProfileIDs.firstIndex(of: rhs.id) ?? preferredProfileIDs.count
+            return lhsPriority < rhsPriority
+        }
+
+        for profile in orderedProfiles {
+            if let index = matchingAssignmentIndex(for: source, in: profile.assignments) {
+                return profile.assignments[index].displayName
+            }
+        }
+
+        return nil
+    }
+
     func duplicateProfile(_ profileID: WallpaperProfile.ID) {
         guard var duplicate = library.profiles.first(where: { $0.id == profileID }) else { return }
         duplicate.id = UUID()
@@ -112,5 +161,45 @@ final class ProfileStore {
 
         return "\(baseName) \(suffix)"
     }
-}
 
+    private func matchingAssignmentIndex(
+        for source: DisplayAssignment,
+        in assignments: [DisplayAssignment]
+    ) -> Int? {
+        if let hardwareKey = source.fingerprint.hardwareKey,
+           let exactIndex = assignments.firstIndex(where: { $0.fingerprint.hardwareKey == hardwareKey }) {
+            return exactIndex
+        }
+
+        return assignments.indices
+            .filter { index in
+                fingerprintsShareStableTraits(source.fingerprint, assignments[index].fingerprint)
+            }
+            .min { lhs, rhs in
+                layoutDistance(from: source, to: assignments[lhs])
+                    < layoutDistance(from: source, to: assignments[rhs])
+            }
+    }
+
+    private func fingerprintsShareStableTraits(
+        _ lhs: DisplayFingerprint,
+        _ rhs: DisplayFingerprint
+    ) -> Bool {
+        let exactPixelSize = lhs.pixelWidth == rhs.pixelWidth && lhs.pixelHeight == rhs.pixelHeight
+        let rotatedPixelSize = lhs.pixelWidth == rhs.pixelHeight && lhs.pixelHeight == rhs.pixelWidth
+
+        return lhs.vendorNumber == rhs.vendorNumber
+            && lhs.modelNumber == rhs.modelNumber
+            && lhs.localizedName.caseInsensitiveCompare(rhs.localizedName) == .orderedSame
+            && (exactPixelSize || rotatedPixelSize)
+            && lhs.isBuiltIn == rhs.isBuiltIn
+    }
+
+    private func layoutDistance(from lhs: DisplayAssignment, to rhs: DisplayAssignment) -> Double {
+        hypot(
+            lhs.normalizedFrame.x - rhs.normalizedFrame.x,
+            lhs.normalizedFrame.y - rhs.normalizedFrame.y
+        ) + abs(lhs.normalizedFrame.width - rhs.normalizedFrame.width)
+            + abs(lhs.normalizedFrame.height - rhs.normalizedFrame.height)
+    }
+}
