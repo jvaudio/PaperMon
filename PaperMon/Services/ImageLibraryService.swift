@@ -116,4 +116,9 @@ struct ImageLibraryService: Sendable {
             .appendingPathComponent("Images", isDirectory: true)
     }
 
+    static func sandboxManagedImagesDirectory(fileManager: FileManager = .default) -> URL {
+        fileManager.homeDirectoryForCurrentUser
+            .appendingPathComponent("Library/Containers/com.papermon.app/Data/Library/Application Support", isDirectory: true)
+            .appendingPathComponent("PaperMon/Images", isDirectory: true)
+    }
 }

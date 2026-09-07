@@ -94,7 +94,6 @@ private struct DisplayTile: View {
                     lineWidth: isSelected ? 3 : 1
                 )
         }
-        .shadow(color: .black.opacity(0.40), radius: 12, y: 6)
         .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(assignment.displayName), \(assignment.fingerprint.orientation.rawValue)")

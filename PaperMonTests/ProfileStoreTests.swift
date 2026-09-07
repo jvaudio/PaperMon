@@ -28,6 +28,21 @@ struct ProfileStoreTests {
         #expect(store.selectedProfile == nil)
     }
 
+    @Test func reloadPicksUpARecoveredActiveProfile() throws {
+        let url = temporaryLibraryURL()
+        let repository = ProfileRepository(libraryURL: url)
+        let store = ProfileStore(repository: repository)
+        let recoveredProfile = WallpaperProfile(name: "Recovered", assignments: [])
+        try repository.save(
+            ProfileLibrary(profiles: [recoveredProfile], activeProfileID: recoveredProfile.id)
+        )
+
+        store.reload()
+
+        #expect(store.profiles == [recoveredProfile])
+        #expect(store.selectedProfileID == recoveredProfile.id)
+    }
+
     @Test func displayNicknameCarriesAcrossProfiles() {
         let store = makeStore()
         let firstAssignment = assignment(serial: 42, x: 0)
@@ -72,10 +87,13 @@ struct ProfileStoreTests {
     }
 
     private func makeStore() -> ProfileStore {
-        let url = FileManager.default.temporaryDirectory
+        ProfileStore(repository: ProfileRepository(libraryURL: temporaryLibraryURL()))
+    }
+
+    private func temporaryLibraryURL() -> URL {
+        FileManager.default.temporaryDirectory
             .appendingPathComponent(UUID().uuidString, isDirectory: true)
             .appendingPathComponent("profiles.json", isDirectory: false)
-        return ProfileStore(repository: ProfileRepository(libraryURL: url))
     }
 
     private func assignment(

@@ -47,7 +47,6 @@ chmod +x "$APP_BINARY"
 /usr/bin/codesign \
   --force \
   --sign - \
-  --entitlements "$ROOT_DIR/PaperMon/PaperMon.entitlements" \
   "$APP_BUNDLE"
 
 open_app() {

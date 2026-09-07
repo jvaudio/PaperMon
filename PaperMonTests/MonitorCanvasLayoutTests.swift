@@ -53,6 +53,67 @@ struct MonitorCanvasLayoutTests {
         #expect(bottom.minY - top.maxY >= 8)
     }
 
+    @Test func stackedLandscapeDisplaysUseTheSameGapAsTheirRightNeighbor() throws {
+        let assignments = [
+            assignment(
+                name: "Top",
+                serial: 1,
+                frame: DisplayFrame(
+                    x: 0.2647058823529412,
+                    y: 0.020630242575379733,
+                    width: 0.47058823529411764,
+                    height: 0.48968487871231015
+                ),
+                pixels: (3840, 2160)
+            ),
+            assignment(
+                name: "Left",
+                serial: 2,
+                frame: DisplayFrame(
+                    x: 0,
+                    y: 0.020630242575379733,
+                    width: 0.2647058823529412,
+                    height: 0.8705508954885514
+                ),
+                pixels: (2160, 3840)
+            ),
+            assignment(
+                name: "Right",
+                serial: 3,
+                frame: DisplayFrame(
+                    x: 0.7352941176470589,
+                    y: 0,
+                    width: 0.2647058823529412,
+                    height: 0.8705508954885514
+                ),
+                pixels: (2160, 3840)
+            ),
+            assignment(
+                name: "Bottom",
+                serial: 4,
+                frame: DisplayFrame(
+                    x: 0.2647058823529412,
+                    y: 0.5103151212876899,
+                    width: 0.47058823529411764,
+                    height: 0.48968487871231015
+                ),
+                pixels: (3840, 2160)
+            ),
+        ]
+
+        let frames = MonitorCanvasLayout().frames(for: assignments, in: CGSize(width: 1080, height: 606))
+        let top = try #require(frames[assignments[0].id])
+        let right = try #require(frames[assignments[2].id])
+        let bottom = try #require(frames[assignments[3].id])
+        let verticalGap = bottom.minY - top.maxY
+        let topRightGap = right.minX - top.maxX
+        let bottomRightGap = right.minX - bottom.maxX
+
+        #expect(verticalGap >= 24)
+        #expect(abs(verticalGap - topRightGap) < 1)
+        #expect(abs(verticalGap - bottomRightGap) < 1)
+    }
+
     private func assignment(
         name: String,
         serial: UInt32,

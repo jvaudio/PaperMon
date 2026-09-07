@@ -42,7 +42,7 @@ The script performs these gates in order:
 
 1. Builds a Release app for Apple Silicon and Intel.
 2. Embeds the app icon and Sparkle framework, then signs Sparkle's helpers from the inside out.
-3. Applies PaperMon's minimal entitlements and the hardened runtime. Direct distribution intentionally does not use App Sandbox because macOS's wallpaper helper must open each managed image independently.
+3. Applies the hardened runtime without App Sandbox entitlements because macOS's wallpaper helper must open each managed image independently.
 4. Performs strict signature validation.
 5. Submits the app for notarization and staples its ticket.
 6. Creates and signs a DMG containing PaperMon and an Applications shortcut.

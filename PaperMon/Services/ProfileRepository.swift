@@ -55,4 +55,10 @@ struct ProfileRepository: Sendable {
             .appendingPathComponent("PaperMon", isDirectory: true)
             .appendingPathComponent("profiles.json", isDirectory: false)
     }
+
+    static func sandboxLibraryURL(fileManager: FileManager = .default) -> URL {
+        fileManager.homeDirectoryForCurrentUser
+            .appendingPathComponent("Library/Containers/com.papermon.app/Data/Library/Application Support", isDirectory: true)
+            .appendingPathComponent("PaperMon/profiles.json", isDirectory: false)
+    }
 }

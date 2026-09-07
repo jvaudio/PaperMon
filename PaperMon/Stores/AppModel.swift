@@ -46,6 +46,7 @@ final class AppModel {
             return
         }
         hasStarted = true
+        recoverLegacyStorage()
         displays.refresh()
 
         let restoresOnLaunch = UserDefaults.standard.object(
@@ -59,6 +60,93 @@ final class AppModel {
             applicationLogger.info("Restoring active profile on launch")
             applyProfile(activeProfileID, showsSuccessNotice: false)
         }
+    }
+
+    private func recoverLegacyStorage() {
+        let sandboxImageSource = ImageLibraryService.sandboxManagedImagesDirectory()
+        let sandboxLibrarySource = ProfileRepository.sandboxLibraryURL()
+        let recoveryMarker = imageLibrary.imagesDirectory
+            .appendingPathComponent(".sandbox-library-recovered", isDirectory: false)
+        let shouldRecoverSandbox = !FileManager.default.fileExists(atPath: recoveryMarker.path)
+        var migrationErrors: [String] = []
+        var sandboxMigrationSucceeded = true
+
+        if shouldRecoverSandbox {
+            let sandboxLibraryDirectory = sandboxLibrarySource.deletingLastPathComponent()
+            do {
+                _ = try FileManager.default.contentsOfDirectory(
+                    at: sandboxLibraryDirectory,
+                    includingPropertiesForKeys: nil
+                )
+            } catch let error as CocoaError where error.code == .fileNoSuchFile {
+                // There is no sandboxed library to recover on a fresh installation.
+            } catch {
+                migrationErrors.append(error.localizedDescription)
+                sandboxMigrationSucceeded = false
+            }
+        }
+
+        let imageSources = [ImageLibraryService.legacyManagedImagesDirectory()]
+            + (shouldRecoverSandbox && sandboxMigrationSucceeded ? [sandboxImageSource] : [])
+        let librarySources = [ProfileRepository.legacyLibraryURL()]
+            + (shouldRecoverSandbox && sandboxMigrationSucceeded ? [sandboxLibrarySource] : [])
+        var migratedLibrary = false
+
+        for sourceDirectory in uniqueURLs(imageSources) {
+            do {
+                _ = try ManagedImageMigrator(
+                    sourceDirectory: sourceDirectory,
+                    destinationDirectory: imageLibrary.imagesDirectory
+                ).migrateIfNeeded()
+            } catch {
+                migrationErrors.append(error.localizedDescription)
+                if sourceDirectory.standardizedFileURL == sandboxImageSource.standardizedFileURL {
+                    sandboxMigrationSucceeded = false
+                }
+            }
+        }
+
+        for sourceURL in uniqueURLs(librarySources) {
+            do {
+                migratedLibrary = try ProfileLibraryMigrator(
+                    sourceURL: sourceURL,
+                    destinationURL: ProfileRepository.defaultLibraryURL()
+                ).migrateIfNeeded() || migratedLibrary
+            } catch {
+                migrationErrors.append(error.localizedDescription)
+                if sourceURL.standardizedFileURL == sandboxLibrarySource.standardizedFileURL {
+                    sandboxMigrationSucceeded = false
+                }
+            }
+        }
+
+        if migratedLibrary {
+            profiles.reload()
+        }
+
+        if shouldRecoverSandbox, sandboxMigrationSucceeded {
+            do {
+                try FileManager.default.createDirectory(
+                    at: imageLibrary.imagesDirectory,
+                    withIntermediateDirectories: true
+                )
+                try Data().write(to: recoveryMarker, options: .atomic)
+            } catch {
+                migrationErrors.append(error.localizedDescription)
+            }
+        }
+
+        if !migrationErrors.isEmpty {
+            notice = AppNotice(
+                title: "Couldn’t Recover Previous Library",
+                message: "Your prior profiles and images were not changed. Allow PaperMon to access its previous app data if macOS asks, then reopen the app. \(migrationErrors.joined(separator: " "))"
+            )
+        }
+    }
+
+    private func uniqueURLs(_ urls: [URL]) -> [URL] {
+        var seen = Set<URL>()
+        return urls.filter { seen.insert($0.standardizedFileURL).inserted }
     }
 
     func createProfile() {

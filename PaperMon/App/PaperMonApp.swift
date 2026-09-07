@@ -22,30 +22,8 @@ struct PaperMonApp: App {
             userDriverDelegate: nil
         )
 
-        var migrationError: Error?
         let imageLibrary = ImageLibraryService()
-
-        do {
-            try ManagedImageMigrator(
-                sourceDirectory: ImageLibraryService.legacyManagedImagesDirectory(),
-                destinationDirectory: imageLibrary.imagesDirectory
-            ).migrateIfNeeded()
-
-            try ProfileLibraryMigrator(
-                sourceURL: ProfileRepository.legacyLibraryURL(),
-                destinationURL: ProfileRepository.defaultLibraryURL()
-            ).migrateIfNeeded()
-        } catch {
-            migrationError = error
-        }
-
         let model = AppModel(imageLibrary: imageLibrary)
-        if let migrationError {
-            model.notice = AppNotice(
-                title: "Couldn’t Prepare Wallpaper Library",
-                message: "Your existing profiles and images are still safe, but PaperMon couldn’t copy its wallpaper library to the Pictures folder. \(migrationError.localizedDescription)"
-            )
-        }
         _appModel = State(initialValue: model)
     }
 

@@ -3,7 +3,6 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 APP_NAME="PaperMon"
-ENTITLEMENTS="$ROOT_DIR/PaperMon/PaperMon.entitlements"
 INFO_PLIST_SOURCE="$ROOT_DIR/Packaging/Info.plist"
 OUTPUT_DIR="$ROOT_DIR/dist/release"
 ASSET_CATALOG="$ROOT_DIR/PaperMon/Resources/Assets.xcassets"
@@ -159,7 +158,6 @@ if [[ $AD_HOC -eq 1 ]]; then
   codesign \
     --force \
     --sign - \
-    --entitlements "$ENTITLEMENTS" \
     "$STAGED_APP"
 else
   codesign \
@@ -167,7 +165,6 @@ else
     --options runtime \
     --timestamp \
     --sign "$IDENTITY" \
-    --entitlements "$ENTITLEMENTS" \
     "$STAGED_APP"
 fi
 

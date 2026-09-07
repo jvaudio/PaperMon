@@ -138,6 +138,22 @@ final class ProfileStore {
         lastPersistenceError = nil
     }
 
+    func reload() {
+        do {
+            let reloadedLibrary = try repository.load()
+            library = reloadedLibrary
+            if let selectedProfileID,
+               reloadedLibrary.profiles.contains(where: { $0.id == selectedProfileID }) {
+                self.selectedProfileID = selectedProfileID
+            } else {
+                selectedProfileID = reloadedLibrary.activeProfileID ?? reloadedLibrary.profiles.first?.id
+            }
+            lastPersistenceError = nil
+        } catch {
+            lastPersistenceError = error.localizedDescription
+        }
+    }
+
     private func persist() {
         do {
             try repository.save(library)
