@@ -33,7 +33,7 @@
 	<key>SUFeedURL</key>
 	<string>https://raw.githubusercontent.com/jvaudio/PaperMon/main/appcast.xml</string>
 	<key>SUPublicEDKey</key>
-	<string>U9TMZ7KojHL83ECvnl+Jvu+hBSlyD4QJDglu0Gan7a8=</string>
+	<string>z7+DvngpT/9ZrJgNEZd6aC0JQPeJc0GY1CPk3P5ddrM=</string>
 	<key>SUVerifyUpdateBeforeExtraction</key>
 	<true/>
 </dict>

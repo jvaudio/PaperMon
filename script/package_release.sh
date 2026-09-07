@@ -120,6 +120,17 @@ X86_64_BIN_DIR="$(swift build --package-path "$ROOT_DIR" --configuration release
 SPARKLE_ARTIFACT_DIR="$ARM64_SCRATCH/artifacts/sparkle/Sparkle"
 SPARKLE_FRAMEWORK_SOURCE="$SPARKLE_ARTIFACT_DIR/Sparkle.xcframework/macos-arm64_x86_64/Sparkle.framework"
 GENERATE_APPCAST="$SPARKLE_ARTIFACT_DIR/bin/generate_appcast"
+GENERATE_KEYS="$SPARKLE_ARTIFACT_DIR/bin/generate_keys"
+
+if [[ $AD_HOC -eq 0 ]]; then
+  EMBEDDED_PUBLIC_KEY="$(plutil -extract SUPublicEDKey raw "$INFO_PLIST_SOURCE")"
+  KEYCHAIN_PUBLIC_KEY="$("$GENERATE_KEYS" -p)"
+  if [[ "$EMBEDDED_PUBLIC_KEY" != "$KEYCHAIN_PUBLIC_KEY" ]]; then
+    echo "The Sparkle public key in Packaging/Info.plist does not match the Keychain signing key." >&2
+    echo "Refusing to create an update that installed copies cannot verify." >&2
+    exit 1
+  fi
+fi
 
 mkdir -p "$STAGED_APP/Contents/MacOS" "$STAGED_FRAMEWORKS" "$STAGED_RESOURCES"
 cp "$INFO_PLIST_SOURCE" "$STAGED_APP/Contents/Info.plist"
