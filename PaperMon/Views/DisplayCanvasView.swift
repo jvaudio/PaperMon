@@ -50,41 +50,45 @@ private struct DisplayTile: View {
             RoundedRectangle(cornerRadius: 11, style: .continuous)
                 .fill(Color.black.opacity(0.92))
 
-            ZStack {
-                RoundedRectangle(cornerRadius: 6, style: .continuous)
-                    .fill(Color.paperMonPanel)
+            GeometryReader { geometry in
+                ZStack {
+                    RoundedRectangle(cornerRadius: 6, style: .continuous)
+                        .fill(Color.paperMonPanel)
 
-                if let preview {
-                    Image(nsImage: preview)
-                        .resizable()
-                        .aspectRatio(contentMode: assignment.presentation.scaling == .fit ? .fit : .fill)
-                        .clipped()
-                } else {
-                    VStack(spacing: 7) {
-                        Image(systemName: "photo.badge.plus")
-                            .font(.title3)
-                        Text("Drop an image")
-                            .font(.caption2.weight(.medium))
+                    if let preview {
+                        Image(nsImage: preview)
+                            .resizable()
+                            .aspectRatio(contentMode: assignment.presentation.scaling == .fit ? .fit : .fill)
+                            .frame(width: geometry.size.width, height: geometry.size.height)
+                            .clipped()
+                    } else {
+                        VStack(spacing: 7) {
+                            Image(systemName: "photo.badge.plus")
+                                .font(.title3)
+                            Text("Drop an image")
+                                .font(.caption2.weight(.medium))
+                        }
+                        .foregroundStyle(Color.paperMonMuted)
                     }
-                    .foregroundStyle(Color.paperMonMuted)
-                }
 
-                VStack {
-                    Spacer()
-                    HStack(spacing: 6) {
-                        Text(assignment.displayName)
-                            .font(.caption2.weight(.semibold))
-                            .lineLimit(1)
-                        Spacer(minLength: 4)
-                        Image(systemName: assignment.fingerprint.orientation == .portrait ? "rectangle.portrait" : "rectangle")
+                    VStack {
+                        Spacer()
+                        HStack(spacing: 6) {
+                            Text(assignment.displayName)
+                                .font(.caption2.weight(.semibold))
+                                .lineLimit(1)
+                            Spacer(minLength: 4)
+                            Image(systemName: assignment.fingerprint.orientation == .portrait ? "rectangle.portrait" : "rectangle")
+                        }
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 6)
+                        .background(.black.opacity(0.66))
                     }
-                    .foregroundStyle(.white)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 6)
-                    .background(.black.opacity(0.66))
                 }
+                .frame(width: geometry.size.width, height: geometry.size.height)
+                .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
             }
-            .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
             .padding(5)
         }
         .overlay {

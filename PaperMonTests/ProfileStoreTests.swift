@@ -86,6 +86,44 @@ struct ProfileStoreTests {
         }
     }
 
+    @Test func sharedTVSerialRenamesSelectedDisplayAcrossProfilesAndRelaunch() throws {
+        let repository = ProfileRepository(libraryURL: temporaryLibraryURL())
+        let store = ProfileStore(repository: repository)
+        let workLeft = assignment(serial: 42, x: 0)
+        let workRight = assignment(serial: 42, x: 0.6)
+        let playLeft = assignment(serial: 42, x: 0)
+        let playRight = assignment(serial: 42, x: 0.6)
+        _ = store.createProfile(name: "Work", assignments: [workLeft, workRight])
+        _ = store.createProfile(name: "Play", assignments: [playLeft, playRight])
+
+        // Exercise every keystroke as the inspector does, using the same source ID.
+        for name in ["R", "Ri", "Right Screen"] {
+            store.updateDisplayName(name, matching: playRight)
+        }
+        store.updateDisplayName("Left Screen", matching: playLeft)
+
+        let relaunched = ProfileStore(repository: repository)
+        #expect(relaunched.lastPersistenceError == nil)
+        for profile in relaunched.profiles {
+            #expect(profile.assignments[0].displayName == "Left Screen")
+            #expect(profile.assignments[1].displayName == "Right Screen")
+        }
+        #expect(relaunched.displayName(for: workLeft.fingerprint, normalizedFrame: workLeft.normalizedFrame) == "Left Screen")
+        #expect(relaunched.displayName(for: workRight.fingerprint, normalizedFrame: workRight.normalizedFrame) == "Right Screen")
+    }
+
+    @Test func selectedAssignmentWinsWhenSavedDisplaysHaveIdenticalTraitsAndLayout() {
+        let store = makeStore()
+        let first = assignment(serial: 42, x: 0)
+        let second = assignment(serial: 42, x: 0)
+        _ = store.createProfile(name: "Work", assignments: [first, second])
+
+        store.updateDisplayName("Selected Screen", matching: second)
+
+        #expect(store.selectedProfile?.assignments[0].displayName == "Display")
+        #expect(store.selectedProfile?.assignments[1].displayName == "Selected Screen")
+    }
+
     private func makeStore() -> ProfileStore {
         ProfileStore(repository: ProfileRepository(libraryURL: temporaryLibraryURL()))
     }

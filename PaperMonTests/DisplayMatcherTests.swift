@@ -57,6 +57,32 @@ struct DisplayMatcherTests {
         #expect(result.matches.first?.confidence == .probable)
     }
 
+    @Test func fallbackCannotStealUniqueTVWhenAnotherDisplayLosesEDID() {
+        let main = snapshot(id: 10, serial: 100, name: "M55Q7-J01", x: 0, width: 3_840, height: 2_160)
+        let left = snapshot(id: 11, serial: 100, name: "M55Q7-H1 (1)", x: -2_160, width: 2_160, height: 3_840)
+        let right = snapshot(id: 12, serial: 100, name: "M55Q7-H1 (2)", x: 3_840, width: 2_160, height: 3_840)
+        var tv = snapshot(id: 13, serial: 100, name: "M55Q6-L4", x: 0, width: 3_840, height: 2_160)
+        tv.fingerprint.modelNumber = 3
+        tv.frame.y = 2_160
+        let saved = assignments(for: [main, left, right, tv])
+        var unidentified = snapshot(id: 42, serial: nil, name: "", x: 3_840, width: 1_080, height: 1_920)
+        unidentified.fingerprint.vendorNumber = nil
+        unidentified.fingerprint.modelNumber = nil
+        var renamedLeft = left
+        renamedLeft.fingerprint.localizedName = "M55Q7-H1"
+
+        for connected in [[main, renamedLeft, tv, unidentified], [unidentified, tv, renamedLeft, main]] {
+            let result = DisplayMatcher().match(assignments: saved, to: connected)
+            #expect(result.matches.count == 4)
+            #expect(result.displayID(for: saved[0].id) == main.id)
+            #expect(result.displayID(for: saved[1].id) == left.id)
+            #expect(result.displayID(for: saved[2].id) == unidentified.id)
+            #expect(result.displayID(for: saved[3].id) == tv.id)
+            #expect(result.unmatchedAssignmentIDs.isEmpty)
+            #expect(result.ambiguousAssignmentIDs.isEmpty)
+        }
+    }
+
     private func assignments(for displays: [DisplaySnapshot]) -> [DisplayAssignment] {
         let frames = DisplayLayoutNormalizer().normalizedFrames(for: displays)
         return displays.map { display in

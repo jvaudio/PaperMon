@@ -182,9 +182,22 @@ final class ProfileStore {
         for source: DisplayAssignment,
         in assignments: [DisplayAssignment]
     ) -> Int? {
-        if let hardwareKey = source.fingerprint.hardwareKey,
-           let exactIndex = assignments.firstIndex(where: { $0.fingerprint.hardwareKey == hardwareKey }) {
-            return exactIndex
+        // The selected assignment is authoritative. TVs can report identical
+        // hardware keys, so firstIndex by hardware key may rename a different tile.
+        if let index = assignments.firstIndex(where: { $0.id == source.id }) {
+            return index
+        }
+
+        if let hardwareKey = source.fingerprint.hardwareKey {
+            let candidates = assignments.indices.filter {
+                assignments[$0].fingerprint.hardwareKey == hardwareKey
+            }
+            if !candidates.isEmpty {
+                return candidates.min { lhs, rhs in
+                    nicknameMatchDistance(from: source, to: assignments[lhs])
+                        < nicknameMatchDistance(from: source, to: assignments[rhs])
+                }
+            }
         }
 
         return assignments.indices
@@ -209,6 +222,11 @@ final class ProfileStore {
             && lhs.localizedName.caseInsensitiveCompare(rhs.localizedName) == .orderedSame
             && (exactPixelSize || rotatedPixelSize)
             && lhs.isBuiltIn == rhs.isBuiltIn
+    }
+
+    private func nicknameMatchDistance(from source: DisplayAssignment, to candidate: DisplayAssignment) -> Double {
+        let orientationPenalty = source.fingerprint.orientation == candidate.fingerprint.orientation ? 0.0 : 2.0
+        return orientationPenalty + layoutDistance(from: source, to: candidate)
     }
 
     private func layoutDistance(from lhs: DisplayAssignment, to rhs: DisplayAssignment) -> Double {

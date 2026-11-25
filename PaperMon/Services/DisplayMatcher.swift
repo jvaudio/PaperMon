@@ -35,7 +35,31 @@ struct DisplayMatcher: Sendable {
         var unmatchedAssignments = Set<DisplayAssignment.ID>()
         var ambiguousAssignments = Set<DisplayAssignment.ID>()
 
-        let orderedAssignments = assignments.sorted { lhs, rhs in
+        // Reserve unique hardware identities before fallback matching can consume
+        // them. Some displays temporarily report no EDID after a restart, while
+        // several TVs may share the same vendor/model/serial combination.
+        for assignment in assignments {
+            guard let key = assignment.fingerprint.hardwareKey,
+                  assignments.filter({ $0.fingerprint.hardwareKey == key }).count == 1 else {
+                continue
+            }
+            let candidates = displays.filter { $0.fingerprint.hardwareKey == key }
+            guard candidates.count == 1, let display = candidates.first else { continue }
+            matches.append(DisplayMatch(
+                assignmentID: assignment.id,
+                displayID: display.id,
+                score: score(
+                    assignment: assignment,
+                    display: display,
+                    normalizedFrame: normalizedFrames[display.id] ?? .zero
+                ),
+                confidence: .exact
+            ))
+            availableDisplays.removeAll { $0.id == display.id }
+        }
+
+        let reservedAssignmentIDs = Set(matches.map(\.assignmentID))
+        let orderedAssignments = assignments.filter { !reservedAssignmentIDs.contains($0.id) }.sorted { lhs, rhs in
             let lhsHasHardwareKey = lhs.fingerprint.hardwareKey != nil
             let rhsHasHardwareKey = rhs.fingerprint.hardwareKey != nil
             return lhsHasHardwareKey && !rhsHasHardwareKey
@@ -62,6 +86,8 @@ struct DisplayMatcher: Sendable {
 
             let exactHardwareMatch = assignment.fingerprint.hardwareKey != nil
                 && assignment.fingerprint.hardwareKey == best.display.fingerprint.hardwareKey
+                && assignments.filter { $0.fingerprint.hardwareKey == assignment.fingerprint.hardwareKey }.count == 1
+                && displays.filter { $0.fingerprint.hardwareKey == best.display.fingerprint.hardwareKey }.count == 1
             if let second = candidates.dropFirst().first,
                best.score - second.score < ambiguityMargin,
                !exactHardwareMatch {

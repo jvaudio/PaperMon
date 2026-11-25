@@ -60,10 +60,17 @@ struct DisplayInspectorView: View {
             sectionTitle("SELECTED DISPLAY")
 
             VStack(alignment: .leading, spacing: 9) {
-                Text(assignment.fingerprint.localizedName)
+                Text(assignment.displayName)
                     .font(.callout.weight(.bold))
                     .foregroundStyle(.white)
                     .lineLimit(1)
+
+                if assignment.displayName != assignment.fingerprint.localizedName {
+                    Text("macOS: \(assignment.fingerprint.localizedName)")
+                        .font(.caption)
+                        .foregroundStyle(Color.paperMonMuted)
+                        .textSelection(.enabled)
+                }
 
                 HStack(spacing: 7) {
                     Circle()
@@ -107,6 +114,10 @@ struct DisplayInspectorView: View {
                 RoundedRectangle(cornerRadius: 7)
                     .stroke(Color.paperMonBorder, lineWidth: 1)
             }
+
+            Text("Saved across PaperMon profiles. macOS System Settings keeps the display’s original name.")
+                .font(.caption)
+                .foregroundStyle(Color.paperMonMuted)
         }
     }
 
