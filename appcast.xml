@@ -3,12 +3,12 @@
     <channel>
         <title>PaperMon</title>
         <item>
-            <title>1.0.3</title>
-            <pubDate>Mon, 07 Sep 2026 11:20:18 -0500</pubDate>
-            <sparkle:version>4</sparkle:version>
-            <sparkle:shortVersionString>1.0.3</sparkle:shortVersionString>
+            <title>1.0.4</title>
+            <pubDate>Wed, 25 Nov 2026 13:07:30 -0600</pubDate>
+            <sparkle:version>5</sparkle:version>
+            <sparkle:shortVersionString>1.0.4</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <enclosure url="https://github.com/jvaudio/PaperMon/releases/download/v1.0.3/PaperMon-1.0.3.dmg" length="4595865" type="application/octet-stream" sparkle:edSignature="vRMIZlj1VP9t6CFVYtM8cXyEd2tdQPP6oAA46lq5r8EyivYzsDPx6ykuCNXPMQi0hvqgRs6mwrgqL1+SoIi9Dw=="/>
+            <enclosure url="https://github.com/jvaudio/PaperMon/releases/download/v1.0.4/PaperMon-1.0.4.dmg" length="4581530" type="application/octet-stream" sparkle:edSignature="M44s8AqVl8ZQDkTaUrJeq0MmwtM5RBWt3so0+02g/jxj7PDtVKfwuN5F5jM45WULxZ47KTR7EjiGwv/SVvcqBg=="/>
         </item>
     </channel>
 </rss>
